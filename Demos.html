@@ -412,26 +412,26 @@ window.onload = () => {
 
   // FARM DATA
   let data = [
-    { name: "Brazil", lat: -14, lng: -51, maize: 2850, beans: 2050, coffee: 5250, demo: { name: "AgroVerde Demo", video: "Brazil.mp4", heat: "high" } },
-    { name: "USA", lat: 31, lng: -100, maize: 3250, beans: 1850, coffee: 2150, demo: { name: "Iowa Smart Farm", video: "https://www.youtube.com/embed/3PZ8sTqKbCw?autoplay=1&mute=1", heat: "high" } },
-    { name: "India", lat: 20, lng: 78, maize: 1850, beans: 2250, coffee: 2750, demo: { name: "Punjab Agri Hub", video: "https://www.youtube.com/embed/JbwizQzUeFE?autoplay=1&mute=1", heat: "mid" } },
-    { name: "Kenya", lat: -1, lng: 36, maize: 1550, beans: 2550, coffee: 4050, demo: { name: "Rift Valley Farm", video: "https://www.youtube.com/embed/9x7U2N9fX6E?autoplay=1&mute=1", heat: "high" } },
-    { name: "Uganda", lat: 1.5, lng: 32.5, maize: 1250, beans: 2250, coffee: 3550, demo: { name: "Buseesa Organic", video: "https://www.youtube.com/watch?v=xnnziy6N4ZY", heat: "mid" } },
-    { name: "Netherlands", lat: 52.5, lng: 5.5, maize: 3850, beans: 2450, coffee: 1850, demo: { name: "Dutch Greenhouse", video: "https://www.youtube.com/embed/4PS7hJPlS8g?autoplay=1&mute=1", heat: "high" } },
-    { name: "Vietnam", lat: 14, lng: 108, maize: 2250, beans: 1950, coffee: 4850, demo: { name: "Highlands Coffee", video: "https://www.youtube.com/embed/0Y9bRKqZMEo?autoplay=1&mute=1", heat: "mid" } },
-    { name: "Nigeria", lat: 9, lng: 8, maize: 2150, beans: 2650, coffee: 2250, demo: { name: "Kaduna Cassava", video: "https://www.youtube.com/embed/7M8vQzK7q8w?autoplay=1&mute=1", heat: "low" } },
-    { name: "Australia", lat: -25, lng: 135, maize: 2950, beans: 2150, coffee: 1950, demo: { name: "Outback Agri", video: "https://www.youtube.com/embed/4PS7hJPlS8g?autoplay=1&mute=1", heat: "mid" } },
-    { name: "France", lat: 46, lng: 2, maize: 3050, beans: 2350, coffee: 1650, demo: { name: "Provence Tech", video: "https://www.youtube.com/embed/3PZ8sTqKbCw?autoplay=1&mute=1", heat: "high" } }
+    { name: "Brazil", lat: -14, lng: -51, maize: 2850, beans: 2050, coffee: 5250, demo: { name: "AgroVerde Demo", video: "https://www.youtube.com/embed/hvXqV8ArsLY", heat: "high" } },
+    { name: "USA", lat: 31, lng: -100, maize: 3250, beans: 1850, coffee: 2150, demo: { name: "Iowa Smart Farm", video: "https://www.youtube.com/embed/AHx27-1Qjxw", heat: "high" } },
+    { name: "India", lat: 20, lng: 78, maize: 1850, beans: 2250, coffee: 2750, demo: { name: "Punjab Agri Hub", video: "https://www.youtube.com/embed/e0TyEZd6NZ0", heat: "mid" } },
+    { name: "Kenya", lat: -1, lng: 36, maize: 1550, beans: 2550, coffee: 4050, demo: { name: "Rift Valley Farm", video: "https://www.youtube.com/embed/mZgSeChDyaY", heat: "high" } },
+    { name: "Uganda", lat: 1.5, lng: 32.5, maize: 1250, beans: 2250, coffee: 3550, demo: { name: "Buseesa Organic", video: "https://www.youtube.com/embed/i7Vm92Iyfu0", heat: "mid" } },
+    { name: "Netherlands", lat: 52.5, lng: 5.5, maize: 3850, beans: 2450, coffee: 1850, demo: { name: "Dutch Greenhouse", video: "https://www.youtube.com/embed/ziBgxehTBDI", heat: "high" } },
+    { name: "Vietnam", lat: 14, lng: 108, maize: 2250, beans: 1950, coffee: 4850, demo: { name: "Highlands Coffee", video: "https://www.youtube.com/embed/BETc5iM9iYk", heat: "mid" } },
+    { name: "Nigeria", lat: 9, lng: 8, maize: 2150, beans: 2650, coffee: 2250, demo: { name: "Kaduna Cassava", video: "https://www.youtube.com/embed/yEx2o5DIzpU", heat: "low" } },
+    { name: "Australia", lat: -25, lng: 135, maize: 2950, beans: 2150, coffee: 1950, demo: { name: "Outback Agri", video: "https://www.youtube.com/embed/FZSsnUXZ8lQ", heat: "mid" } },
+    { name: "France", lat: 46, lng: 2, maize: 3050, beans: 2350, coffee: 1650, demo: { name: "Provence Tech", video: "https://www.youtube.com/embed/rJeP7fP67_0", heat: "high" } }
   ];
 
   // UGANDA DEMO FARMS
   const ugandaFarms = [
     { name: "Buseesa Organic Agro", lat: 1.52, lng: 32.53, intensity: 0.88, crop: "Coffee/Maize", video: "https://www.youtube.com/embed/xnnziy6N4ZY", desc: "Organic coffee & maize" },
-    { name: "Mukono Smart Hub", lat: 0.35, lng: 32.75, intensity: 0.72, crop: "Dairy/Crops", video: "https://www.youtube.com/embed/3PZ8sTqKbCw?autoplay=1&mute=1", desc: "Smart irrigation" },
-    { name: "Jinja AquaFarm", lat: 0.43, lng: 33.20, intensity: 0.68, crop: "Aquaponics", video: "https://www.youtube.com/embed/JbwizQzUeFE?autoplay=1&mute=1", desc: "Fish & Veggies" },
-    { name: "Fort Portal Agro", lat: 0.66, lng: 30.27, intensity: 0.85, crop: "Organic Coffee", video: "https://www.youtube.com/embed/9x7U2N9fX6E?autoplay=1&mute=1", desc: "Highland Arabica" },
-    { name: "Gulu Cereals Hub", lat: 2.77, lng: 32.30, intensity: 0.55, crop: "Sorghum/Maize", video: "https://www.youtube.com/embed/7M8vQzK7q8w?autoplay=1&mute=1", desc: "Climate-smart" },
-    { name: "Mbale Highlands", lat: 1.08, lng: 34.18, intensity: 0.78, crop: "Arabica Coffee", video: "https://www.youtube.com/embed/0Y9bRKqZMEo?autoplay=1&mute=1", desc: "Premium export" }
+    { name: "Mukono Smart Hub", lat: 0.35, lng: 32.75, intensity: 0.72, crop: "Dairy/Crops", video: "https://www.youtube.com/embed/vISwP_qb11o", desc: "Smart irrigation" },
+    { name: "Jinja AquaFarm", lat: 0.43, lng: 33.20, intensity: 0.68, crop: "Aquaponics", video: "https://www.youtube.com/embed/0dwLOfyDlmA", desc: "Fish & Veggies" },
+    { name: "Fort Portal Agro", lat: 0.66, lng: 30.27, intensity: 0.85, crop: "Organic Coffee", video: "https://www.youtube.com/embed/9qCW0qjO5Gw", desc: "Highland Arabica" },
+    { name: "Gulu Cereals Hub", lat: 2.77, lng: 32.30, intensity: 0.55, crop: "Sorghum/Maize", video: "https://www.youtube.com/embed/voqIBAqapzo", desc: "Climate-smart" },
+    { name: "Mbale Highlands", lat: 1.08, lng: 34.18, intensity: 0.78, crop: "Arabica Coffee", video: "https://www.youtube.com/embed/lpum_iUzllM", desc: "Premium export" }
   ];
 
   data.forEach(d => { d.history = { maize: [d.maize], beans: [d.beans], coffee: [d.coffee] }; d.heatValue = d.demo.heat === 'high' ? 0.9 : d.demo.heat === 'mid' ? 0.6 : 0.3; });
