@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>Yield Vault 360 | Agro Inputs Marketplace</title>
+    <!-- Google Fonts & Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            /*background: radial-gradient(circle at 10% 20%, #0a0f1a, #03060c);*/
+             background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('mk.jpg') center/cover no-repeat;
+            position: relative;
+
+            color: #ffffff;
+            overflow-x: hidden;
+            font-size: 14px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* MTN Pulse Premium Glassmorphism Theme */
+        :root {
+            --pulse-gold: #FFC107;
+            --pulse-gold-dark: #FFB300;
+            --pulse-cyan: #00E0FF;
+            --pulse-green: #00E676;
+            --glass-bg: rgba(18, 24, 34, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-border-gold: rgba(255, 193, 7, 0.25);
+            --shadow-depth: 0 20px 40px -12px rgba(0, 0, 0, 0.4);
+            --shadow-hover: 0 30px 50px -15px rgba(0, 0, 0, 0.5);
+            --transition-smooth: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        /* Keyframe Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); filter: blur(4px); }
+            to { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.5); }
+            50% { box-shadow: 0 0 0 18px rgba(255, 193, 7, 0); }
+        }
+
+        @keyframes numberPop {
+            0% { transform: scale(0.8); opacity: 0; text-shadow: 0 0 0px rgba(255,193,7,0); }
+            100% { transform: scale(1); opacity: 1; text-shadow: 0 0 12px rgba(255,193,7,0.5); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header - Premium Glass with Depth */
+        .header {
+            background: rgba(10, 15, 25, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--glass-border-gold);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .logo h1 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFF8E7, var(--pulse-gold), #FFE57F);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+
+        .logo h1 i {
+            background: linear-gradient(135deg, var(--pulse-gold), #FFE57F);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-right: 6px;
+        }
+
+        .logo span {
+            font-size: 0.65rem;
+            opacity: 0.8;
+            display: block;
+        }
+
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 6px 20px;
+            border-radius: 40px;
+            transition: var(--transition-smooth);
+            font-size: 0.85rem;
+            font-weight: 600;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+        }
+
+        .cart-icon:hover {
+            background: var(--pulse-gold);
+            color: #0a0f18;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -8px rgba(255, 193, 7, 0.5);
+            border-color: transparent;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--pulse-gold);
+            color: #0a0f18;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        /* Hero Section - Premium Glass */
+        .hero {
+            background: linear-gradient(135deg, rgba(0, 30, 20, 0.7), rgba(5, 15, 10, 0.8)), url('https://placehold.co/1600x500/0a121c/2a3a2a?text=+');
+            background-size: cover;
+            background-blend-mode: overlay;
+            border-radius: 0 0 48px 48px;
+            padding: 32px 0;
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,193,7,0.08) 0%, transparent 70%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .hero-content {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-text h2 {
+            font-size: 1.7rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFFFFF, var(--pulse-gold));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .hero-text p {
+            font-size: 0.95rem;
+            margin-top: 8px;
+            color: rgba(255,255,240,0.85);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 16px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+            background: rgba(20, 28, 38, 0.6);
+            backdrop-filter: blur(12px);
+            padding: 8px 20px;
+            border-radius: 30px;
+            transition: var(--transition-smooth);
+            border: 1px solid rgba(255, 193, 7, 0.2);
+        }
+
+        .stat:hover {
+            transform: translateY(-3px);
+            background: rgba(30, 40, 55, 0.8);
+            border-color: var(--pulse-gold);
+            box-shadow: 0 12px 24px -10px rgba(0,0,0,0.4);
+        }
+
+        .stat .number {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--pulse-gold);
+            display: inline-block;
+            animation: numberPop 0.5s ease-out;
+            text-shadow: 0 0 8px rgba(255,193,7,0.3);
+        }
+
+        /* Showcase Section - Glassmorphism + Depth */
+        .showcase-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 40px;
+            padding: 32px 20px;
+            margin: 40px 0;
+            box-shadow: var(--shadow-depth);
+            border: 1px solid var(--glass-border-gold);
+        }
+
+        .showcase-title {
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 28px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .showcase-title i {
+            color: var(--pulse-gold);
+            text-shadow: 0 0 8px gold;
+        }
+
+        .carousel-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 28px;
+            
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            padding: 16px; 
+        }
+
+        .feature-product {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            align-items: center;
+            justify-content: center;
+            background: rgba(12, 18, 26, 0.7);
+            backdrop-filter: blur(16px);
+            border-radius: 40px;
+            padding: 30px;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255, 193, 7, 0.2);
+            transition: var(--transition-smooth);
+        }
+
+        .feature-product:hover {
+            border-color: rgba(255, 193, 7, 0.5);
+            transform: scale(1.01);
+        }
+
+        .feature-product-img {
+            flex: 1;
+            text-align: center;
+            min-width: 200px;
+        }
+
+        .feature-product-img img {
+            width: 100%;
+            max-width: 280px;
+            height: auto;
+            border-radius: 24px;
+            object-fit: cover;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.4);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-product-img img:hover {
+            transform: scale(1.02);
+        }
+
+        .feature-product-info {
+            flex: 1;
+        }
+
+        .feature-product-info h2 {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+            color: #fff;
+        }
+
+        .feature-product-info p {
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+            color: #cbd5e6;
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,200,0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: var(--pulse-gold);
+            width: 28px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px gold;
+        }
+
+        /* Product & Equipment Grids - Premium Cards */
+        .product-grid, .equip-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .product-card, .equip-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            border-radius: 28px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border-gold);
+            transition: var(--transition-smooth);
+            box-shadow: 0 12px 28px -10px rgba(0,0,0,0.3);
+        }
+
+        .product-card:hover, .equip-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--pulse-gold);
+            box-shadow: var(--shadow-hover);
+            background: rgba(25, 32, 45, 0.8);
+        }
+
+        .product-img {
+            height: 160px;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .product-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s;
+        }
+
+        .product-card:hover .product-img img {
+            transform: scale(1.05);
+        }
+
+        .product-info {
+            padding: 16px;
+        }
+
+        .product-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: #fff;
+        }
+
+        .rating {
+            color: var(--pulse-gold);
+            margin: 8px 0;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .product-price {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--pulse-green);
+            margin: 8px 0;
+            text-shadow: 0 0 5px rgba(0,230,118,0.3);
+        }
+
+        .region-check {
+            background: rgba(255, 193, 7, 0.12);
+            padding: 8px;
+            border-radius: 20px;
+            margin: 10px 0;
+            font-size: 0.7rem;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s ease;
+            color: #FFE6B3;
+            border: 0.5px solid rgba(255,193,7,0.3);
+        }
+
+        .region-check:hover {
+            background: rgba(255, 193, 7, 0.25);
+            transform: scale(0.98);
+        }
+
+        .resistance-info {
+            display: none;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            padding: 10px;
+            border-radius: 16px;
+            margin-top: 8px;
+            font-size: 0.7rem;
+            border-left: 3px solid var(--pulse-gold);
+        }
+
+        .btn-add, .btn-hire {
+            width: 100%;
+            padding: 10px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+            background: linear-gradient(105deg, rgba(255,193,7,0.85), rgba(255,160,0,0.85));
+            color: #0a0f18;
+        }
+
+        .btn-add:hover, .btn-hire:hover {
+            background: var(--pulse-gold);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px -6px rgba(255,193,7,0.5);
+        }
+
+        .btn-hire {
+            background: linear-gradient(105deg, rgba(0,224,255,0.8), rgba(0,200,210,0.8));
+            color: #0a0f18;
+        }
+
+        .btn-hire:hover {
+            background: var(--pulse-cyan);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 40px 0 20px;
+            border-left: 4px solid var(--pulse-gold);
+            padding-left: 16px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title i {
+            color: var(--pulse-gold);
+            font-size: 1.3rem;
+        }
+
+        /* AI Assistant - Glass Orb with Pulse */
+        .ai-assistant {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            z-index: 1000;
+            cursor: pointer;
+            background: radial-gradient(circle at 30% 20%, var(--pulse-gold), #FF9800);
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4), 0 0 0 2px rgba(255,193,7,0.4);
+            transition: all 0.3s ease;
+            animation: pulseGlow 2s infinite;
+        }
+
+        .ai-assistant:hover {
+            transform: scale(1.08);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+
+        .ai-assistant i {
+            font-size: 1.6rem;
+            color: #0a0f18;
+        }
+
+        .ai-chat-window {
+            position: fixed;
+            bottom: 140px;
+            right: 20px;
+            width: 300px;
+            background: rgba(18, 24, 34, 0.95);
+            backdrop-filter: blur(24px);
+            border-radius: 24px;
+            box-shadow: 0 25px 45px rgba(0,0,0,0.4);
+            z-index: 1001;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid rgba(255, 193, 7, 0.4);
+        }
+
+        .ai-chat-header {
+            background: rgba(0,0,0,0.5);
+            color: white;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .ai-chat-body {
+            height: 300px;
+            overflow-y: auto;
+            padding: 12px;
+            background: rgba(0,0,0,0.2);
+            font-size: 0.8rem;
+        }
+
+        .ai-chat-input {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid rgba(255,193,7,0.2);
+            gap: 8px;
+        }
+
+        .ai-chat-input input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid rgba(255,193,7,0.3);
+            border-radius: 30px;
+            outline: none;
+            font-size: 0.8rem;
+            background: rgba(0,0,0,0.4);
+            color: white;
+        }
+
+        .ai-chat-input input::placeholder {
+            color: rgba(255,255,200,0.6);
+        }
+
+        .ai-chat-input button {
+            background: var(--pulse-gold);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 30px;
+            color: #0a0f18;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .message {
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            border-radius: 16px;
+            max-width: 85%;
+            font-size: 0.75rem;
+        }
+
+        .user-message {
+            background: var(--pulse-gold);
+            color: #0a0f18;
+            margin-left: auto;
+            border-radius: 18px 18px 4px 18px;
+        }
+
+        .bot-message {
+            background: rgba(255,255,245,0.12);
+            backdrop-filter: blur(4px);
+            color: #f0f0f0;
+            border-radius: 18px 18px 18px 4px;
+        }
+
+        /* Modal Styles - Glass */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(20px);
+            z-index: 1100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: rgba(18, 24, 34, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 32px;
+            max-width: 450px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 24px;
+            border: 1px solid rgba(255,193,7,0.3);
+            color: white;
+        }
+
+        .modal-content h2 {
+            font-size: 1.2rem;
+            color: var(--pulse-gold);
+        }
+
+        .modal-content input, .modal-content select, .modal-content textarea {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,193,7,0.3);
+            color: white;
+            border-radius: 24px;
+            padding: 10px;
+            width: 100%;
+            margin: 6px 0;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(20px);
+            color: var(--pulse-gold);
+            padding: 10px 24px;
+            border-radius: 60px;
+            z-index: 1100;
+            opacity: 0;
+            transition: 0.3s;
+            pointer-events: none;
+            font-weight: 600;
+            font-size: 0.8rem;
+            border: 1px solid rgba(255,193,7,0.4);
+        }
+
+        footer {
+            background: rgba(10, 15, 25, 0.85);
+            backdrop-filter: blur(12px);
+            color: #a0aab8;
+            padding: 32px 0 16px;
+            margin-top: 50px;
+            border-radius: 28px 28px 0 0;
+            font-size: 0.75rem;
+            border-top: 1px solid rgba(255,193,7,0.2);
+        }
+
+        @media (max-width: 768px) {
+            body { font-size: 13px; }
+            .hero-text h2 { font-size: 1.3rem; }
+            .navbar { flex-direction: column; text-align: center; }
+            .stat .number { font-size: 1.2rem; }
+            .ai-chat-window { width: 260px; right: 10px; bottom: 120px; }
+            .toast { white-space: normal; text-align: center; width: 90%; font-size: 0.75rem; }
+            .feature-product { flex-direction: column; text-align: center; padding: 20px; }
+            .feature-product-img img { max-width: 220px; }
+            .showcase-title { font-size: 1.2rem; }
+            .section-title { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="container">
+        <div class="navbar">
+            <div class="logo">
+                <h1><i class="fas fa-tractor"></i> Yield Vault 360</h1>
+                <span><i class="fas fa-map-marker-alt"></i> AI-Powered Agro Inputs Hub</span>
+            </div>
+            <div class="cart-icon" id="cartIcon">
+                <i class="fas fa-shopping-cart"></i> Cart
+                <span class="cart-count" id="cartCount">0</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h2>Smart Farming Starts Here</h2>
+                <p>Quality inputs, equipment hire & AI advisory — all in UGX Shillings</p>
+                <div class="hero-stats">
+                    <div class="stat"><span class="number" id="counter1">0</span><br>Happy Farmers</div>
+                    <div class="stat"><span class="number" id="counter2">0</span><br>Orders Delivered</div>
+                    <div class="stat"><span class="number" id="counter3">0</span><br>Equipment Hires</div>
+                </div>
+            </div>
+            <div style="font-size: 3rem; color: var(--pulse-gold); filter: drop-shadow(0 8px 20px rgba(0,0,0,0.3)); animation: float 3s infinite;">
+                <i class="fas fa-apple-alt"></i> <i class="fas fa-robot"></i>
+            </div>
+        </div>
+    </div>
+</section>-->
+
+<div class="container">
+    <!-- 3-DOT AUTO-ROTATING SHOWCASE WITH REAL IMAGES -->
+    <div class="showcase-section">
+        <div class="showcase-title">
+            <i class="fas fa-star"></i> Featured Premium Products <i class="fas fa-star"></i>
+        </div>
+        <div class="carousel-container">
+            <div class="carousel-track" id="carouselTrack"></div>
+        </div>
+        <div class="carousel-dots" id="carouselDots"></div>
+    </div>
+
+    <div class="section-title">Agro Inputs | Check Regional Success Rate</div>
+    <div class="product-grid" id="productsGrid"></div>
+
+    <div class="section-title">Farm Equipment | See Ratings Before Hire</div>
+    <div class="equip-grid" id="equipGrid"></div>
+</div>
+
+<!-- AI Assistant Float -->
+<div class="ai-assistant" id="aiAssistantBtn">
+    <i class="fas fa-robot"></i>
+</div>
+<div class="ai-chat-window" id="aiChatWindow">
+    <div class="ai-chat-header">
+        <span><i class="fas fa-seedling"></i> Farm Twin AI Assistant</span>
+        <span style="cursor:pointer" id="closeChatBtn">&times;</span>
+    </div>
+    <div class="ai-chat-body" id="chatBody">
+        <div class="message bot-message">👋 Hi! I'm your Farm Twin. Ask me about crop disease, planting seasons, fertilizer recommendations, or regional success rates for Uganda!</div>
+    </div>
+    <div class="ai-chat-input">
+        <input type="text" id="chatInput" placeholder="Ask anything farming...">
+        <button id="sendChatBtn"><i class="fas fa-paper-plane"></i></button>
+    </div>
+</div>
+
+<!-- Modals -->
+<div id="cartModal" class="modal"><div class="modal-content"><div style="display:flex; justify-content:space-between; margin-bottom:16px;"><h2><i class="fas fa-shopping-cart"></i> Cart</h2><span id="closeCart" style="cursor:pointer; font-size:26px;">&times;</span></div><div id="cartItemsList"></div><div id="cartTotalDisplay" style="font-size:1.1rem; font-weight:700; margin:16px 0; text-align:right;"></div><button class="btn-add" id="checkoutBtn" style="background:var(--pulse-gold); color:#0a0f18;">Proceed to Checkout</button></div></div>
+
+<div id="checkoutModal" class="modal"><div class="modal-content"><div style="display:flex; justify-content:space-between;"><h2>Checkout</h2><span id="closeCheckout" style="cursor:pointer; font-size:26px;">&times;</span></div><form id="checkoutForm"><input type="text" placeholder="Full Name" id="fullName" required><input type="email" placeholder="Email" id="emailAddr" required><input type="tel" placeholder="Phone" id="phoneNum" required><input type="text" placeholder="District (e.g., Kampala, Gulu)" id="address" required><select id="paymentMethod"><option>Mobile Money (MTN/Airtel)</option><option>Credit Card</option></select><button type="submit" class="btn-add" style="background:var(--pulse-gold); width:100%;">Place Order</button></form></div></div>
+
+<div id="hireModal" class="modal"><div class="modal-content"><div style="display:flex; justify-content:space-between;"><h2>Hire Equipment</h2><span id="closeHire" style="cursor:pointer; font-size:26px;">&times;</span></div><form id="hireForm"><input type="text" placeholder="Full Name" id="hireName" required><input type="tel" placeholder="Phone" id="hirePhone" required><input type="email" placeholder="Email" id="hireEmail" required><select id="equipmentSelect" required></select><input type="number" placeholder="Days needed" id="hireDays" min="1" required><textarea rows="2" placeholder="Location in Uganda" id="hireLocation"></textarea><button type="submit" class="btn-hire" style="background:var(--pulse-cyan); width:100%;">Send Request (Email/WhatsApp)</button></form></div></div>
+
+<div id="toastMsg" class="toast">✓</div>
+
+<script>
+    // Products with regional success data - added image placeholders for carousel
+    const products = [
+        { id: 1, name: "Hybrid Maize Seed (Longe 5)", category: "Seeds", price: 105000, oldPrice: 125000, rating: 4.5, regionData: { "Central": "92% success", "Eastern": "88%", "Western": "85%", "Northern": "78%" }, resistance: "Tolerant to Maize Lethal Necrosis & Drought", image: "maiz.jfif" },
+        { id: 2, name: "NPK 20:10:10 Fertilizer", category: "Fertilizer", price: 168000, rating: 4.3, regionData: { "Central": "High yield +30%", "Eastern": "Good response", "Western": "Excellent", "Northern": "Moderate" }, resistance: "Balanced nutrients for all soil types", image: "npk.jfif" },
+        { id: 3, name: "Tomato Seedlings (Tengeru)", category: "Seedlings", price: 48000, oldPrice: 55000, rating: 4.7, regionData: { "Central": "95% survival", "Eastern": "90%", "Western": "92%", "Northern": "82%" }, resistance: "Resistant to bacterial wilt & nematodes", image: "tomato.jfif" },
+        { id: 4, name: "Organic Compost", category: "Soil", price: 69000, rating: 4.2, regionData: { "Central": "Great for vegetables", "Eastern": "Good", "Western": "Excellent", "Northern": "Good" }, resistance: "Improves soil structure & water retention", image: "compost.jfif" }
+    ];
+
+    const equipment = [
+        { id: 101, name: "75HP Tractor", rate: 165000, rating: 4.8, reviews: 124, image: "tractor.jfif" },
+        { id: 102, name: "Combine Harvester", rate: 445000, rating: 4.6, reviews: 89, image: "Harvester.jfif" },
+        { id: 103, name: "Sprayer Drone", rate: 315000, rating: 4.9, reviews: 56, image: "drone.jfif" },
+        { id: 104, name: "Oxen Plough", rate: 100000, rating: 4.9, reviews: 86, image: "ox.jfif" }
+    ];
+
+    const featuredProducts = products.slice(0, 3);
+    let cart = [];
+    let countersStarted = false;
+    let currentSlide = 0;
+    let autoSlideInterval;
+
+    function formatUGX(amount) { return 'UGX ' + amount.toLocaleString('en-UG'); }
+
+    function startCounters() {
+        if (countersStarted) return;
+        countersStarted = true;
+        const targets = [12500, 8450, 3120];
+        const counters = ['counter1', 'counter2', 'counter3'].map(id => document.getElementById(id));
+        targets.forEach((target, i) => {
+            let current = 0;
+            const increment = target / 60;
+            const interval = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    if (counters[i]) counters[i].innerText = target.toLocaleString();
+                    clearInterval(interval);
+                } else {
+                    if (counters[i]) counters[i].innerText = Math.floor(current).toLocaleString();
+                }
+            }, 25);
+        });
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => { if (entry.isIntersecting) startCounters(); });
+    }, { threshold: 0.3 });
+    const heroStats = document.querySelector('.hero-stats');
+    if (heroStats) observer.observe(heroStats);
+
+    function initCarousel() {
+        const track = document.getElementById('carouselTrack');
+        const dotsContainer = document.getElementById('carouselDots');
+        if (!track || !dotsContainer) return;
+        
+        track.innerHTML = featuredProducts.map((product, idx) => `
+            <div class="carousel-slide">
+                <div class="feature-product">
+                    <div class="feature-product-img">
+                        <img src="${product.image}" alt="${product.name}">
+                    </div>
+                    <div class="feature-product-info">
+                        <h2>${product.name}</h2>
+                        <p>Premium quality agro input for Ugandan farmers. High yield potential with proper agronomic practices.</p>
+                        <div class="rating">⭐ ${product.rating} (Regional success data available)</div>
+                        <div class="product-price" style="font-size: 1.4rem;">${formatUGX(product.price)} ${product.oldPrice ? `<span style="text-decoration:line-through; font-size:0.9rem;">${formatUGX(product.oldPrice)}</span>` : ''}</div>
+                        <button class="btn-add" onclick='addToCart(${JSON.stringify(product).replace(/'/g, "&#39;")})' style="width: auto; padding: 8px 28px;"><i class="fas fa-cart-plus"></i> Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        
+        dotsContainer.innerHTML = featuredProducts.map((_, idx) => `<div class="dot ${idx === 0 ? 'active' : ''}" data-index="${idx}"></div>`).join('');
+        
+        document.querySelectorAll('.dot').forEach(dot => {
+            dot.addEventListener('click', (e) => {
+                const index = parseInt(e.target.dataset.index);
+                goToSlide(index);
+                resetAutoSlide();
+            });
+        });
+        
+        startAutoSlide();
+    }
+    
+    function goToSlide(index) {
+        currentSlide = index;
+        const track = document.getElementById('carouselTrack');
+        if (track) track.style.transform = `translateX(-${currentSlide * 100}%)`;
+        document.querySelectorAll('.dot').forEach((dot, i) => {
+            dot.classList.toggle('active', i === currentSlide);
+        });
+    }
+    
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % featuredProducts.length;
+        goToSlide(currentSlide);
+    }
+    
+    function startAutoSlide() {
+        if (autoSlideInterval) clearInterval(autoSlideInterval);
+        autoSlideInterval = setInterval(nextSlide, 5000);
+    }
+    
+    function resetAutoSlide() {
+        clearInterval(autoSlideInterval);
+        startAutoSlide();
+    }
+
+    function updateCartUI() {
+        const count = cart.reduce((s, i) => s + i.quantity, 0);
+        const cartCountElem = document.getElementById('cartCount');
+        if (cartCountElem) cartCountElem.innerText = count;
+        renderCartItems();
+    }
+
+    window.addToCart = function(product) {
+        const existing = cart.find(i => i.id === product.id);
+        if (existing) existing.quantity++;
+        else cart.push({ ...product, quantity: 1 });
+        updateCartUI();
+        showToast(`✓ ${product.name} added - ${formatUGX(product.price)}`);
+    };
+
+    function renderCartItems() {
+        const container = document.getElementById('cartItemsList');
+        const totalDisplay = document.getElementById('cartTotalDisplay');
+        if (!container) return;
+        if (cart.length === 0) { 
+            container.innerHTML = '<p style="text-align:center;">Cart empty</p>'; 
+            if (totalDisplay) totalDisplay.innerHTML = 'Total: UGX 0'; 
+            return; 
+        }
+        let html = '', total = 0;
+        cart.forEach((item, idx) => {
+            total += item.price * item.quantity;
+            html += `<div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid rgba(255,193,7,0.2); font-size:0.8rem;">
+                        <div><strong>${item.name}</strong><br>${formatUGX(item.price)} x ${item.quantity}</div>
+                        <div>${formatUGX(item.price * item.quantity)} <button onclick="removeFromCart(${idx})" style="background:none; border:none; color:var(--pulse-gold); cursor:pointer;"><i class="fas fa-trash"></i></button></div>
+                     </div>`;
+        });
+        container.innerHTML = html;
+        if (totalDisplay) totalDisplay.innerHTML = `Total: ${formatUGX(total)}`;
+    }
+
+    window.removeFromCart = function(idx) { 
+        cart.splice(idx, 1); 
+        updateCartUI(); 
+        showToast("Item removed"); 
+    };
+
+    function showToast(msg) { 
+        const t = document.getElementById('toastMsg'); 
+        if (t) { t.innerText = msg; t.style.opacity = '1'; setTimeout(() => t.style.opacity = '0', 2500); } 
+    }
+
+    window.showRegionInfo = function(productId) {
+        const product = products.find(p => p.id === productId);
+        if (!product) return;
+        const regions = Object.entries(product.regionData).map(([r, s]) => `${r}: ${s}`).join(' • ');
+        showToast(`📊 Regional Success: ${regions} | Resistance: ${product.resistance}`);
+        const infoDiv = document.getElementById(`region-info-${productId}`);
+        if (infoDiv) {
+            infoDiv.style.display = infoDiv.style.display === 'none' ? 'block' : 'none';
+            infoDiv.innerHTML = `<strong>🌍 Regional Success Rates:</strong><br>${Object.entries(product.regionData).map(([r, s]) => `${r}: ${s}`).join('<br>')}<br><strong>🛡️ Resistance:</strong> ${product.resistance}`;
+        }
+    };
+
+    function renderProducts() {
+        const grid = document.getElementById('productsGrid');
+        if (!grid) return;
+        grid.innerHTML = products.map(p => `
+            <div class="product-card">
+                <div class="product-img"><img src="${p.image}" alt="${p.name}"></div>
+                <div class="product-info">
+                    <div class="product-title">${p.name}</div>
+                    <div class="rating">⭐ ${p.rating} (Regional data available)</div>
+                    <div class="product-price">${formatUGX(p.price)} ${p.oldPrice ? `<span style="text-decoration:line-through; font-size:0.7rem;">${formatUGX(p.oldPrice)}</span>` : ''}</div>
+                    <div class="region-check" onclick="showRegionInfo(${p.id})"><i class="fas fa-map-marker-alt"></i> Check success in your region</div>
+                    <div id="region-info-${p.id}" class="resistance-info" style="display:none;"></div>
+                    <button class="btn-add" onclick='addToCart(${JSON.stringify(p).replace(/'/g, "&#39;")})'><i class="fas fa-cart-plus"></i> Add to Cart</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function renderEquipment() {
+        const grid = document.getElementById('equipGrid');
+        const select = document.getElementById('equipmentSelect');
+        if (!grid) return;
+        grid.innerHTML = equipment.map(e => `
+            <div class="equip-card">
+                <div class="product-img"><img src="${e.image}" alt="${e.name}"></div>
+                <div class="product-info">
+                    <div class="product-title">${e.name}</div>
+                    <div class="rating">⭐ ${e.rating} (${e.reviews} reviews) <i class="fas fa-check-circle" style="color:var(--pulse-green);"></i></div>
+                    <div class="product-price">${formatUGX(e.rate)}<span style="font-size:0.7rem;"> / day</span></div>
+                    <div style="font-size:0.7rem; margin:6px 0;"></div>
+                    <button class="btn-hire" onclick="openHireModal()"><i class="fas fa-calendar-check"></i> View Ratings & Hire</button>
+                </div>
+            </div>
+        `).join('');
+        if (select) select.innerHTML = '<option value="">Select Equipment</option>' + equipment.map(e => `<option value="${e.name} (${formatUGX(e.rate)}/day) | Rating: ${e.rating}⭐">${e.name} - ${formatUGX(e.rate)}/day (${e.rating}⭐)</option>`).join('');
+    }
+
+    // AI Assistant Logic
+    const aiResponses = {
+        "blight": "For late blight in tomatoes, use copper-based fungicides. Remove infected leaves. Success rate high in Central & Western Uganda.",
+        "maize": "Plant Longe 5 or Longe 10H. For northern Uganda, use drought-tolerant varieties.",
+        "fertilizer": "NPK 20:10:10 works well for maize. Apply at planting and top-dress with urea after 4 weeks.",
+        "season": "First rains: March-May. Second season: August-November. Always check local forecast.",
+        "default": "I'm your Farm Twin! Ask me about crop diseases, fertilizer, equipment hire, or regional success rates."
+    };
+
+    function getAIResponse(question) {
+        const q = question.toLowerCase();
+        if (q.includes('blight') || q.includes('disease')) return aiResponses.blight;
+        if (q.includes('maize') || q.includes('corn')) return aiResponses.maize;
+        if (q.includes('fertilizer') || q.includes('npk')) return aiResponses.fertilizer;
+        if (q.includes('season') || q.includes('plant')) return aiResponses.season;
+        return aiResponses.default;
+    }
+
+    function addMessage(text, isUser) {
+        const chatBody = document.getElementById('chatBody');
+        if (!chatBody) return;
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+        msgDiv.innerHTML = isUser ? `<i class="fas fa-user"></i> ${text}` : `<i class="fas fa-robot"></i> ${text}`;
+        chatBody.appendChild(msgDiv);
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    document.getElementById('aiAssistantBtn')?.addEventListener('click', () => {
+        const win = document.getElementById('aiChatWindow');
+        if (win) win.style.display = win.style.display === 'flex' ? 'none' : 'flex';
+    });
+    document.getElementById('closeChatBtn')?.addEventListener('click', () => {
+        const win = document.getElementById('aiChatWindow');
+        if (win) win.style.display = 'none';
+    });
+    document.getElementById('sendChatBtn')?.addEventListener('click', () => {
+        const input = document.getElementById('chatInput');
+        const q = input?.value.trim();
+        if (!q) return;
+        addMessage(q, true);
+        setTimeout(() => addMessage(getAIResponse(q), false), 500);
+        if (input) input.value = '';
+    });
+    document.getElementById('chatInput')?.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') document.getElementById('sendChatBtn')?.click();
+    });
+
+    // Modal handlers
+    const cartModal = document.getElementById('cartModal');
+    const checkoutModal = document.getElementById('checkoutModal');
+    const hireModal = document.getElementById('hireModal');
+    
+    document.getElementById('cartIcon')?.addEventListener('click', () => { renderCartItems(); if (cartModal) cartModal.style.display = 'flex'; });
+    document.getElementById('closeCart')?.addEventListener('click', () => { if (cartModal) cartModal.style.display = 'none'; });
+    document.getElementById('closeCheckout')?.addEventListener('click', () => { if (checkoutModal) checkoutModal.style.display = 'none'; });
+    document.getElementById('closeHire')?.addEventListener('click', () => { if (hireModal) hireModal.style.display = 'none'; });
+    
+    document.getElementById('checkoutBtn')?.addEventListener('click', () => {
+        if (cart.length === 0) showToast("Cart empty");
+        else { if (cartModal) cartModal.style.display = 'none'; if (checkoutModal) checkoutModal.style.display = 'flex'; }
+    });
+
+    document.getElementById('checkoutForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = document.getElementById('fullName')?.value || '';
+        const email = document.getElementById('emailAddr')?.value || '';
+        const phone = document.getElementById('phoneNum')?.value || '';
+        const addr = document.getElementById('address')?.value || '';
+        const payment = document.getElementById('paymentMethod')?.value || '';
+        const total = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+        const msg = `ORDER: ${name}, ${email}, ${phone}, ${addr}, ${payment}, Total: ${formatUGX(total)}`;
+        window.location.href = `mailto:paddypride6@gmail.com?subject=AgriSmart Order&body=${encodeURIComponent(msg)}`;
+        showToast(`✅ Order placed! Total: ${formatUGX(total)}`);
+        cart = [];
+        updateCartUI();
+        if (checkoutModal) checkoutModal.style.display = 'none';
+        if (document.getElementById('checkoutForm')) document.getElementById('checkoutForm').reset();
+    });
+
+    window.openHireModal = function() { if (hireModal) hireModal.style.display = 'flex'; };
+    
+    document.getElementById('hireForm')?.addEventListener('submit', (e) => { 
+        e.preventDefault();
+        const name = document.getElementById('hireName')?.value || '';
+        const phone = document.getElementById('hirePhone')?.value || '';
+        const email = document.getElementById('hireEmail')?.value || '';
+        const equip = document.getElementById('equipmentSelect')?.value || '';
+        const days = document.getElementById('hireDays')?.value || '';
+        const location = document.getElementById('hireLocation')?.value || '';
+        const msg = `HIRE REQUEST: ${name}, ${phone}, ${email}, ${equip}, ${days} days, Location: ${location}`;
+        window.open(`mailto:paddypride6@gmail.com?subject=Equipment Hire Uganda&body=${encodeURIComponent(msg)}`);
+        window.open(`https://wa.me/256758470261?text=${encodeURIComponent(msg)}`, '_blank');
+        showToast("✅ Hire request sent! We'll contact you shortly.");
+        if (hireModal) hireModal.style.display = 'none';
+        if (document.getElementById('hireForm')) document.getElementById('hireForm').reset();
+    });
+
+    // Initialize everything
+    initCarousel();
+    renderProducts();
+    renderEquipment();
+    updateCartUI();
+</script>
+<footer>
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+            <div><i class="fas fa-tractor"></i> Yield Vault 360 - AI-Powered Marketplace<br>© 2026 All rights reserved</div>
+            <div>📞 Support: +256 758 470261 | ✉️ yieldvault360@gmail.com</div>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

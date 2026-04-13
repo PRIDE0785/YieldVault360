@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Agro Nexus AI | Uganda 3D Ripple Map + Smart Globe 🌍🇺🇬</title>
+<style>
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Segoe UI', 'Inter', 'Poppins', sans-serif;
+  background: radial-gradient(circle at 30% 20%, #010218, #000000);
+  color: white;
+}
+
+#globeViz {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  transition: transform 1.8s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+
+/* COMPACT PANELS */
+.panel {
+  position: absolute;
+  background: rgba(8, 15, 25, 0.85);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 255, 136, 0.35);
+  border-radius: 20px;
+  padding: 12px 16px;
+  transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+  z-index: 20;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  font-size: 12px;
+}
+
+.panel:hover {
+  transform: translateY(-3px);
+  border-color: #00ff88;
+  box-shadow: 0 0 25px rgba(0,255,136,0.2);
+}
+
+#infoPanel { right: 15px; top: 15px; width: 260px; }
+#chartPanel { bottom: 15px; right: 15px; width: 280px; }
+#leaderboard { left: 15px; top: 80px; width: 220px; }
+#demoPanel { left: 15px; bottom: 15px; width: 260px; background: linear-gradient(135deg, rgba(0,255,136,0.12), rgba(0,0,0,0.7)); border-color: #00ff88; }
+
+.panel h3, .panel h4 {
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: #00ff88;
+  letter-spacing: 1px;
+}
+.panel p { margin: 4px 0; font-size: 11px; }
+
+/* UGANDA FLAG BUTTON - TOP LEFT */
+#focusUgandaBtn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #000000 0%, #000000 33%, #FCDC00 33%, #FCDC00 66%, #D92323 66%, #D92323 100%);
+  background-size: 200% 100%;
+  border: 2px solid #FFD966;
+  border-radius: 50px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  color: white;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+  z-index: 30;
+  box-shadow: 0 0 15px rgba(0,0,0,0.5);
+  transition: all 0.3s;
+  font-family: inherit;
+  letter-spacing: 1px;
+  animation: flagPulse 1.8s infinite ease-in-out;
+}
+@keyframes flagPulse {
+  0% { box-shadow: 0 0 0 0 rgba(253, 220, 0, 0.7); transform: scale(1); }
+  50% { box-shadow: 0 0 0 12px rgba(217, 35, 35, 0.4); transform: scale(1.03); }
+  100% { box-shadow: 0 0 0 0 rgba(0,0,0,0); transform: scale(1); }
+}
+#focusUgandaBtn:hover { animation: none; transform: scale(1.05); filter: brightness(1.1); }
+
+#compactChart {
+  width: 100%;
+  height: 120px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 12px;
+  margin-top: 8px;
+}
+
+.demo-farm-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(0,255,136,0.15);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.demo-farm-item:hover {
+  background: rgba(0,255,136,0.1);
+  padding-left: 6px;
+  border-radius: 10px;
+}
+.farm-name { font-weight: 600; color: #00ff88; font-size: 11px; }
+.farm-location { font-size: 9px; opacity: 0.7; }
+.watch-btn {
+  background: rgba(0,255,136,0.2);
+  border: 1px solid #00ff88;
+  border-radius: 20px;
+  padding: 2px 10px;
+  font-size: 9px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.watch-btn:hover { background: #00ff88; color: #000; }
+
+.heat-badge {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+.heat-high { background: #ff3366; box-shadow: 0 0 6px #ff3366; }
+.heat-mid { background: #ffaa33; box-shadow: 0 0 4px #ffaa33; }
+.heat-low { background: #00ff88; box-shadow: 0 0 4px #00ff88; }
+
+.top-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  font-size: 11px;
+}
+
+/* VIDEO MODAL */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.96);
+  backdrop-filter: blur(24px);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+.modal-content {
+  background: linear-gradient(145deg, #0a0f1e, #05080f);
+  border-radius: 32px;
+  max-width: 92%;
+  width: 1100px;
+  border: 1px solid rgba(0, 255, 136, 0.6);
+  box-shadow: 0 0 80px rgba(0,255,136,0.3);
+  overflow: hidden;
+  animation: modalGlow 0.4s ease-out;
+}
+@keyframes modalGlow {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+.modal-header {
+  padding: 16px 24px;
+  background: rgba(0, 20, 10, 0.9);
+  border-bottom: 1px solid rgba(0,255,136,0.3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+.modal-header span { color: #00ff88; text-shadow: 0 0 8px rgba(0,255,136,0.5); }
+.modal-header button {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  border-radius: 30px;
+  transition: 0.2s;
+}
+.modal-header button:hover { background: #ff3366; transform: scale(1.05); }
+.modal-body iframe {
+  width: 100%;
+  height: 62vh;
+  min-height: 420px;
+  border: none;
+  background: #000;
+}
+
+/* UGANDA 3D RIPPLE MAP OVERLAY */
+#ugandaRippleOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(10px);
+  z-index: 400;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0.2s, opacity 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.2);
+}
+.uganda-ripple-container {
+  position: relative;
+  width: 88vw;
+  height: 85vh;
+  max-width: 1300px;
+  max-height: 850px;
+  background: radial-gradient(circle at center, #0a2a1a, #021008);
+  border-radius: 48px;
+  border: 2px solid #FCDC00;
+  box-shadow: 0 0 80px rgba(253, 220, 0, 0.4), 0 0 30px rgba(217, 35, 35, 0.3);
+  overflow: hidden;
+  animation: rippleEnter 0.9s cubic-bezier(0.34, 1.1, 0.64, 1);
+}
+@keyframes rippleEnter {
+  0% { opacity: 0; transform: scale(0.7) rotateX(-20deg); clip-path: circle(0% at 50% 50%); }
+  40% { clip-path: circle(30% at 50% 50%); }
+  100% { opacity: 1; transform: scale(1) rotateX(0deg); clip-path: circle(100% at 50% 50%); }
+}
+.uganda-header-flag {
+  position: absolute;
+  top: 15px;
+  left: 20px;
+  z-index: 25;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(8px);
+  padding: 8px 20px;
+  border-radius: 40px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-left: 4px solid #FCDC00;
+  font-weight: bold;
+}
+.uganda-header-flag span { color: #FCDC00; font-size: 1rem; }
+.close-uganda {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: #D92323;
+  border: none;
+  color: white;
+  font-size: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 30px;
+  cursor: pointer;
+  z-index: 25;
+  transition: 0.2s;
+  font-weight: bold;
+}
+.close-uganda:hover { transform: scale(1.1); background: #ff5500; }
+#ugandaTerrainCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.uganda-demo-list {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 12px 16px;
+  width: 260px;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 25;
+  border-right: 3px solid #FCDC00;
+  font-size: 11px;
+}
+.uganda-demo-list h4 {
+  margin: 0 0 8px 0;
+  color: #FCDC00;
+  font-size: 13px;
+  text-align: center;
+}
+.demo-point-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 5px;
+  border-bottom: 1px solid rgba(253,220,0,0.3);
+  cursor: pointer;
+  transition: 0.2s;
+}
+.demo-point-item:hover {
+  background: rgba(253,220,0,0.2);
+  border-radius: 12px;
+  padding-left: 8px;
+}
+.demo-point-name { font-weight: bold; color: #ffdd88; }
+.tour-btn-small {
+  background: #D92323;
+  border: none;
+  border-radius: 20px;
+  padding: 3px 12px;
+  font-size: 9px;
+  color: white;
+  cursor: pointer;
+}
+.tour-btn-small:hover { background: #FCDC00; color: black; }
+
+.rotation-status {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  background: rgba(0,0,0,0.5);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 10px;
+  z-index: 25;
+  pointer-events: none;
+  font-family: monospace;
+  backdrop-filter: blur(4px);
+}
+
+@media (max-width: 768px) {
+  .panel { width: calc(100% - 30px) !important; left: 15px !important; right: 15px !important; }
+  .uganda-ripple-container { width: 95vw; height: 70vh; }
+  .uganda-demo-list { width: 200px; max-height: 220px; bottom: 10px; right: 10px; }
+  #focusUgandaBtn { top: 15px; left: 15px; padding: 8px 16px; font-size: 11px; }
+  .rotation-status { bottom: 80px; left: 15px; font-size: 8px; }
+}
+</style>
+</head>
+<body>
+
+<div id="globeViz"></div>
+<button id="focusUgandaBtn">	Focus Uganda|RIPPLE MAP 🌊</button>
+
+<div id="leaderboard" class="panel"><h4>🏆 TOP DEMO FARMS</h4><div id="topList"></div></div>
+<div id="demoPanel" class="panel">
+  <h4>🌾 DEMO FARMS <span style="font-size:9px;">🔥 HEAT MAP</span></h4>
+  <div id="demoFarmsList" style="max-height: 180px; overflow-y: auto;"></div>
+  <div style="margin-top: 8px; font-size:9px; text-align:center;">
+    <span><span class="heat-badge heat-high"></span> Hot Demo</span>
+    <span style="margin-left:8px;"><span class="heat-badge heat-mid"></span> Featured</span>
+    <span style="margin-left:8px;"><span class="heat-badge heat-low"></span> Growing</span>
+  </div>
+</div>
+<div id="infoPanel" class="panel">
+  <h3>📍 FARM INTELLIGENCE</h3>
+  <p id="location"></p><p id="maize"></p><p id="beans"></p><p id="coffee"></p><p id="advice"></p>
+  <div id="demoLink" style="margin-top: 8px;"></div>
+</div>
+<div id="chartPanel" class="panel">
+  <h3>📊 CROP TRENDS <span style="font-size:9px;">| LIVE</span></h3>
+  <canvas id="compactChart" width="260" height="100"></canvas>
+  <div style="display: flex; justify-content: space-between; margin-top: 6px; font-size: 9px;">
+    <span><span style="color:#ffaa33;">●</span> Maize</span>
+    <span><span style="color:#00ff88;">●</span> Beans</span>
+    <span><span style="color:#00aaff;">●</span> Coffee</span>
+  </div>
+</div>
+
+<div id="videoModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header"><span id="modalTitle">🌾 Uganda Farm Experience</span><button onclick="closeModal()">✕</button></div>
+    <div class="modal-body"><iframe id="videoFrame" src="" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe></div>
+  </div>
+</div>
+
+<div id="ugandaRippleOverlay">
+  <div class="uganda-ripple-container">
+    <div class="uganda-header-flag">
+      <div>🇺🇬</div>
+      <span>UGANDA | 3D TERRAIN MAP</span>
+      <div style="width:30px; height:20px; background:linear-gradient(90deg, black 33%, #FCDC00 33%, #FCDC00 66%, #D92323 66%); border-radius:4px;"></div>
+    </div>
+    <button class="close-uganda" id="closeUgandaRipple">✕</button>
+    <canvas id="ugandaTerrainCanvas"></canvas>
+    <div class="uganda-demo-list" id="ugandaDemoListPanel">
+      <h4>🔥 UGANDA DEMO FARMS</h4>
+      <div id="ugandaDemoPointsList"></div>
+      <div style="font-size:9px; text-align:center; margin-top:8px;">✨ Click any point or button for tour</div>
+    </div>
+  </div>
+</div>
+
+<div class="rotation-status" id="rotationStatus">🌍 AUTO-ROTATE ACTIVE</div>
+
+<script src="https://unpkg.com/three@0.158.0/build/three.min.js"></script>
+<script src="https://unpkg.com/globe.gl@2.30.0/dist/globe.gl.min.js"></script>
+
+<script>
+window.onload = () => {
+  // GLOBE INIT
+  const globe = Globe()(document.getElementById('globeViz'))
+    .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
+    .bumpImageUrl('https://unpkg.com/three-globe/example/img/earth-topology.png')
+    .backgroundColor('#000000')
+    .atmosphereColor('#00aaff')
+    .atmosphereAltitude(0.28);
+
+  // FARM DATA
+  let data = [
+    { name: "Brazil", lat: -14, lng: -51, maize: 2850, beans: 2050, coffee: 5250, demo: { name: "AgroVerde Demo", video: "Brazil.mp4", heat: "high" } },
+    { name: "USA", lat: 31, lng: -100, maize: 3250, beans: 1850, coffee: 2150, demo: { name: "Iowa Smart Farm", video: "https://www.youtube.com/embed/3PZ8sTqKbCw?autoplay=1&mute=1", heat: "high" } },
+    { name: "India", lat: 20, lng: 78, maize: 1850, beans: 2250, coffee: 2750, demo: { name: "Punjab Agri Hub", video: "https://www.youtube.com/embed/JbwizQzUeFE?autoplay=1&mute=1", heat: "mid" } },
+    { name: "Kenya", lat: -1, lng: 36, maize: 1550, beans: 2550, coffee: 4050, demo: { name: "Rift Valley Farm", video: "https://www.youtube.com/embed/9x7U2N9fX6E?autoplay=1&mute=1", heat: "high" } },
+    { name: "Uganda", lat: 1.5, lng: 32.5, maize: 1250, beans: 2250, coffee: 3550, demo: { name: "Buseesa Organic", video: "https://www.youtube.com/watch?v=xnnziy6N4ZY", heat: "mid" } },
+    { name: "Netherlands", lat: 52.5, lng: 5.5, maize: 3850, beans: 2450, coffee: 1850, demo: { name: "Dutch Greenhouse", video: "https://www.youtube.com/embed/4PS7hJPlS8g?autoplay=1&mute=1", heat: "high" } },
+    { name: "Vietnam", lat: 14, lng: 108, maize: 2250, beans: 1950, coffee: 4850, demo: { name: "Highlands Coffee", video: "https://www.youtube.com/embed/0Y9bRKqZMEo?autoplay=1&mute=1", heat: "mid" } },
+    { name: "Nigeria", lat: 9, lng: 8, maize: 2150, beans: 2650, coffee: 2250, demo: { name: "Kaduna Cassava", video: "https://www.youtube.com/embed/7M8vQzK7q8w?autoplay=1&mute=1", heat: "low" } },
+    { name: "Australia", lat: -25, lng: 135, maize: 2950, beans: 2150, coffee: 1950, demo: { name: "Outback Agri", video: "https://www.youtube.com/embed/4PS7hJPlS8g?autoplay=1&mute=1", heat: "mid" } },
+    { name: "France", lat: 46, lng: 2, maize: 3050, beans: 2350, coffee: 1650, demo: { name: "Provence Tech", video: "https://www.youtube.com/embed/3PZ8sTqKbCw?autoplay=1&mute=1", heat: "high" } }
+  ];
+
+  // UGANDA DEMO FARMS
+  const ugandaFarms = [
+    { name: "Buseesa Organic Agro", lat: 1.52, lng: 32.53, intensity: 0.88, crop: "Coffee/Maize", video: "https://www.youtube.com/embed/xnnziy6N4ZY", desc: "Organic coffee & maize" },
+    { name: "Mukono Smart Hub", lat: 0.35, lng: 32.75, intensity: 0.72, crop: "Dairy/Crops", video: "https://www.youtube.com/embed/3PZ8sTqKbCw?autoplay=1&mute=1", desc: "Smart irrigation" },
+    { name: "Jinja AquaFarm", lat: 0.43, lng: 33.20, intensity: 0.68, crop: "Aquaponics", video: "https://www.youtube.com/embed/JbwizQzUeFE?autoplay=1&mute=1", desc: "Fish & Veggies" },
+    { name: "Fort Portal Agro", lat: 0.66, lng: 30.27, intensity: 0.85, crop: "Organic Coffee", video: "https://www.youtube.com/embed/9x7U2N9fX6E?autoplay=1&mute=1", desc: "Highland Arabica" },
+    { name: "Gulu Cereals Hub", lat: 2.77, lng: 32.30, intensity: 0.55, crop: "Sorghum/Maize", video: "https://www.youtube.com/embed/7M8vQzK7q8w?autoplay=1&mute=1", desc: "Climate-smart" },
+    { name: "Mbale Highlands", lat: 1.08, lng: 34.18, intensity: 0.78, crop: "Arabica Coffee", video: "https://www.youtube.com/embed/0Y9bRKqZMEo?autoplay=1&mute=1", desc: "Premium export" }
+  ];
+
+  data.forEach(d => { d.history = { maize: [d.maize], beans: [d.beans], coffee: [d.coffee] }; d.heatValue = d.demo.heat === 'high' ? 0.9 : d.demo.heat === 'mid' ? 0.6 : 0.3; });
+  let active = data[4];
+  let currentHoverPoint = null;
+  let autoRotateActive = true;
+  let autoRotateTimer = null;
+  let userInteractedRecently = false;
+
+  function getPointColor(d, isHover = false) { if (isHover) return "#ffffff"; if (d === active) return "#00ffff"; if (d.heatValue > 0.7) return "#ff3366"; if (d.heatValue > 0.4) return "#ffaa33"; return "#00ff88"; }
+  
+  // Function to manage auto-rotation with smart timeout
+  function resetAutoRotateTimer() {
+    if (autoRotateTimer) clearTimeout(autoRotateTimer);
+    userInteractedRecently = true;
+    if (controls.autoRotate) {
+      controls.autoRotate = false;
+      autoRotateActive = false;
+      document.getElementById('rotationStatus').innerHTML = '⏸️ ROTATION PAUSED (click globe to resume)';
+      document.getElementById('rotationStatus').style.opacity = '0.7';
+    }
+    autoRotateTimer = setTimeout(() => {
+      if (!controls.autoRotate && !controls.userDragging) {
+        controls.autoRotate = true;
+        autoRotateActive = true;
+        userInteractedRecently = false;
+        document.getElementById('rotationStatus').innerHTML = '🌍 AUTO-ROTATE ACTIVE';
+        document.getElementById('rotationStatus').style.opacity = '1';
+      }
+    }, 5000); // Resume after 5 seconds of inactivity
+  }
+  
+  function forceResumeAutoRotate() {
+    if (autoRotateTimer) clearTimeout(autoRotateTimer);
+    if (!controls.autoRotate && !controls.userDragging) {
+      controls.autoRotate = true;
+      autoRotateActive = true;
+      userInteractedRecently = false;
+      document.getElementById('rotationStatus').innerHTML = '🌍 AUTO-ROTATE ACTIVE';
+      document.getElementById('rotationStatus').style.opacity = '1';
+    }
+  }
+  
+  function renderGlobe() {
+    globe.pointsData(data).pointAltitude(d => d.maize / 5500).pointColor(d => { const isHover = (currentHoverPoint && currentHoverPoint.name === d.name); return getPointColor(d, isHover); }).pointRadius(d => { if (currentHoverPoint && currentHoverPoint.name === d.name) return 0.9; return d === active ? 0.65 : (0.35 + d.heatValue * 0.25); }).onPointClick(d => { 
+      active = d; 
+      updateInfo(); 
+      drawCompactChart(); 
+      renderDemoFarmsList(); 
+      updateTopList();
+      // Reset auto-rotate timer on point click
+      resetAutoRotateTimer();
+    }).onPointHover(point => { 
+      if (point) { 
+        if (controls.autoRotate && autoRotateActive) { 
+          controls.autoRotate = false; 
+          autoRotateActive = false;
+          document.getElementById('rotationStatus').innerHTML = '⏸️ HOVER - ROTATION PAUSED';
+          document.getElementById('rotationStatus').style.opacity = '0.7';
+          if (autoRotateTimer) clearTimeout(autoRotateTimer);
+        }
+        currentHoverPoint = point; 
+        renderGlobe(); 
+      } else { 
+        setTimeout(() => { 
+          currentHoverPoint = null; 
+          renderGlobe(); 
+          // Resume after hover with timer
+          if (!controls.autoRotate && !controls.userDragging && !userInteractedRecently) {
+            autoRotateTimer = setTimeout(() => {
+              controls.autoRotate = true;
+              autoRotateActive = true;
+              document.getElementById('rotationStatus').innerHTML = '🌍 AUTO-ROTATE ACTIVE';
+              document.getElementById('rotationStatus').style.opacity = '1';
+            }, 2000);
+          }
+        }, 300); 
+      } 
+    });
+    globe.ringsData([active]).ringColor(() => "#00ffff").ringMaxRadius(3.5).ringRepeatPeriod(800);
+  }
+
+  const controls = globe.controls();
+  controls.autoRotate = true; 
+  controls.autoRotateSpeed = 0.45; 
+  controls.enableDamping = true; 
+  controls.userDragging = false;
+  
+  // Track user drag interaction
+  controls.addEventListener('start', () => { 
+    controls.userDragging = true;
+    if (controls.autoRotate) {
+      controls.autoRotate = false;
+      autoRotateActive = false;
+      document.getElementById('rotationStatus').innerHTML = '🖱️ DRAG - ROTATION PAUSED';
+      document.getElementById('rotationStatus').style.opacity = '0.7';
+      if (autoRotateTimer) clearTimeout(autoRotateTimer);
+    }
+  });
+  
+  controls.addEventListener('end', () => {
+    controls.userDragging = false;
+    resetAutoRotateTimer();
+  });
+
+  function updateInfo() {
+    document.getElementById('location').innerHTML = `📍 ${active.name} ${active.demo.heat === 'high' ? '🔥' : active.demo.heat === 'mid' ? '⭐' : '🌱'}`;
+    document.getElementById('maize').innerHTML = `🌽 Maize: UGX ${active.maize.toLocaleString()}/kg`;
+    document.getElementById('beans').innerHTML = `🫘 Beans: UGX ${active.beans.toLocaleString()}/kg`;
+    document.getElementById('coffee').innerHTML = `☕ Coffee: UGX ${active.coffee.toLocaleString()}/kg`;
+    let advice = active.coffee > 4000 ? "💡 Premium coffee! Export now" : active.maize > 2800 ? "🌽 Strong maize demand" : "📊 Stable market";
+    document.getElementById('advice').innerHTML = `💡 ${advice}`;
+    document.getElementById('demoLink').innerHTML = `<div style="background:rgba(0,255,136,0.12); border-radius:12px; padding:6px; cursor:pointer; text-align:center;" onclick="openVideo('${active.demo.video}', '${active.demo.name} Tour')"><i class="fas fa-play-circle"></i> 🎥 ${active.demo.name} Tour</div>`;
+  }
+  
+  function updateTopList() { 
+    const sorted = [...data].sort((a,b)=>(b.maize+b.beans)-(a.maize+a.beans)); 
+    document.getElementById('topList').innerHTML = sorted.slice(0,3).map(f=>`<div class="top-item"><span><span class="heat-badge ${f.heatValue>0.7?'heat-high':f.heatValue>0.4?'heat-mid':'heat-low'}"></span> ${f.name}</span><span style="color:#00ff88;">🏆 ${Math.round((f.maize+f.beans+f.coffee)/100)}</span></div>`).join(''); 
+  }
+  
+  function renderDemoFarmsList() { 
+    document.getElementById('demoFarmsList').innerHTML = data.map(farm=>`<div class="demo-farm-item" onclick="openVideo('${farm.demo.video}', '${farm.demo.name} Tour')"><div><div class="farm-name"><span class="heat-badge ${farm.heatValue>0.7?'heat-high':farm.heatValue>0.4?'heat-mid':'heat-low'}"></span>${farm.demo.name}</div><div class="farm-location">📍 ${farm.name}</div></div><button class="watch-btn" onclick="event.stopPropagation(); openVideo('${farm.demo.video}', '${farm.demo.name} Tour')">▶ Tour</button></div>`).join(''); 
+  }
+
+  // UGANDA 3D TERRAIN MAP
+  let ugandaScene, ugandaCamera, ugandaRenderer, rippleTime = 0;
+  function initUgandaTerrain() {
+    const canvas = document.getElementById('ugandaTerrainCanvas');
+    const container = canvas.parentElement;
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+    
+    ugandaScene = new THREE.Scene();
+    ugandaScene.background = new THREE.Color(0x051a0e);
+    ugandaScene.fog = new THREE.FogExp2(0x051a0e, 0.012);
+    
+    ugandaCamera = new THREE.PerspectiveCamera(42, width/height, 0.1, 1000);
+    ugandaCamera.position.set(1.2, 1.4, 2.8);
+    ugandaCamera.lookAt(0, 0, 0);
+    
+    ugandaRenderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: false });
+    ugandaRenderer.setSize(width, height);
+    ugandaRenderer.shadowMap.enabled = true;
+    
+    const ambient = new THREE.AmbientLight(0x446644);
+    ugandaScene.add(ambient);
+    const mainLight = new THREE.DirectionalLight(0xffeedd, 1.2);
+    mainLight.position.set(3, 5, 2);
+    mainLight.castShadow = true;
+    ugandaScene.add(mainLight);
+    const fillLight = new THREE.PointLight(0x88aaff, 0.5);
+    fillLight.position.set(-1, 1.5, 1.5);
+    ugandaScene.add(fillLight);
+    
+    const widthSegments = 80;
+    const heightSegments = 80;
+    const geometry = new THREE.PlaneGeometry(3.2, 2.6, widthSegments, heightSegments);
+    geometry.rotateX(-Math.PI / 2);
+    
+    const positions = geometry.attributes.position.array;
+    for (let i = 0; i < positions.length; i += 3) {
+      let x = positions[i];
+      let z = positions[i+2];
+      let elevation = 0;
+      elevation += Math.max(0, 0.22 * Math.sin(x * 1.8) * Math.cos(z * 1.5));
+      elevation += 0.12 * Math.exp(-Math.pow((x+0.5)*1.2, 2) - Math.pow((z-0.3)*1.4, 2));
+      elevation += 0.08 * Math.sin(x * 3.2) * 0.5;
+      elevation = Math.min(0.32, Math.max(0.05, elevation));
+      positions[i+1] = elevation;
+    }
+    geometry.computeVertexNormals();
+    
+    const terrainMat = new THREE.MeshStandardMaterial({ color: 0x6a9e4b, roughness: 0.55, metalness: 0.08 });
+    const terrainMesh = new THREE.Mesh(geometry, terrainMat);
+    terrainMesh.castShadow = true;
+    terrainMesh.receiveShadow = true;
+    ugandaScene.add(terrainMesh);
+    
+    const edgesGeo = new THREE.EdgesGeometry(geometry);
+    const edgesMat = new THREE.LineBasicMaterial({ color: 0x88ffaa });
+    const wireframe = new THREE.LineSegments(edgesGeo, edgesMat);
+    ugandaScene.add(wireframe);
+    
+    ugandaFarms.forEach(farm => {
+      const xMap = (farm.lng - 30.5) / 5.5 * 3.0 - 0.2;
+      const zMap = (farm.lat - 1.2) / 3.2 * 2.2 - 0.4;
+      let yPos = 0.12 + farm.intensity * 0.12;
+      const sphereGeo = new THREE.SphereGeometry(0.055 + farm.intensity * 0.045, 24, 24);
+      const colorHot = farm.intensity > 0.75 ? 0xff6644 : (farm.intensity > 0.6 ? 0xffaa44 : 0x66ff66);
+      const material = new THREE.MeshStandardMaterial({ color: colorHot, emissive: colorHot, emissiveIntensity: 0.55 });
+      const sphere = new THREE.Mesh(sphereGeo, material);
+      sphere.position.set(xMap, yPos, zMap);
+      sphere.userData = { video: farm.video, name: farm.name };
+      ugandaScene.add(sphere);
+    });
+    
+    const particleCount = 800;
+    const particleGeo = new THREE.BufferGeometry();
+    const particlePositions = [];
+    for (let i = 0; i < particleCount; i++) {
+      particlePositions.push((Math.random() - 0.5) * 3.6);
+      particlePositions.push((Math.random() - 0.5) * 2.2 + 0.2);
+      particlePositions.push((Math.random() - 0.5) * 2.8);
+    }
+    particleGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(particlePositions), 3));
+    const particles = new THREE.Points(particleGeo, new THREE.PointsMaterial({ color: 0x88ffaa, size: 0.012 }));
+    ugandaScene.add(particles);
+    
+    function animateRipple() {
+      requestAnimationFrame(animateRipple);
+      rippleTime += 0.02;
+      particles.rotation.y += 0.003;
+      particles.rotation.x = Math.sin(rippleTime * 0.5) * 0.1;
+      ugandaCamera.position.x += (0.2 - ugandaCamera.position.x) * 0.04;
+      ugandaCamera.lookAt(0, 0.1, 0);
+      ugandaRenderer.render(ugandaScene, ugandaCamera);
+    }
+    animateRipple();
+  }
+  
+  function showUgandaRippleMap() {
+    const overlay = document.getElementById('ugandaRippleOverlay');
+    overlay.style.visibility = 'visible';
+    overlay.style.opacity = '1';
+    
+    const listContainer = document.getElementById('ugandaDemoPointsList');
+    listContainer.innerHTML = ugandaFarms.map(farm => `
+      <div class="demo-point-item" onclick="openVideo('${farm.video}', '${farm.name} - ${farm.crop} Tour')">
+        <div>
+          <div class="demo-point-name">🔥 ${farm.name}</div>
+          <div style="font-size:8px; opacity:0.8;">${farm.crop}</div>
+        </div>
+        <button class="tour-btn-small" onclick="event.stopPropagation(); openVideo('${farm.video}', '${farm.name} Tour')">▶ Tour</button>
+      </div>
+    `).join('');
+    
+    if (!ugandaRenderer) {
+      setTimeout(() => initUgandaTerrain(), 50);
+    } else {
+      const canvas = document.getElementById('ugandaTerrainCanvas');
+      const rect = canvas.parentElement.getBoundingClientRect();
+      ugandaRenderer.setSize(rect.width, rect.height);
+    }
+  }
+  
+  document.getElementById('closeUgandaRipple').onclick = () => {
+    const overlay = document.getElementById('ugandaRippleOverlay');
+    overlay.style.opacity = '0';
+    setTimeout(() => overlay.style.visibility = 'hidden', 500);
+  };
+  
+  document.getElementById('focusUgandaBtn').onclick = () => {
+    globe.pointOfView({ lat: 1.5, lng: 32.5, altitude: 1.2 }, 1000);
+    setTimeout(() => {
+      const ugandaObj = data.find(d => d.name === "Uganda");
+      if(ugandaObj) { active = ugandaObj; updateInfo(); drawCompactChart(); renderDemoFarmsList(); updateTopList(); renderGlobe(); }
+      showUgandaRippleMap();
+    }, 300);
+    resetAutoRotateTimer();
+  };
+  
+  window.openVideo = (url, title) => {
+    const modal = document.getElementById('videoModal');
+    const frame = document.getElementById('videoFrame');
+    document.getElementById('modalTitle').innerText = title || 'Farm Tour';
+    let finalUrl = url;
+    if(finalUrl.includes('youtube') && !finalUrl.includes('autoplay')) finalUrl += (finalUrl.includes('?') ? '&autoplay=1&mute=1' : '?autoplay=1&mute=1');
+    frame.src = finalUrl;
+    modal.style.display = 'flex';
+  };
+  window.closeModal = () => { document.getElementById('videoFrame').src = ''; document.getElementById('videoModal').style.display = 'none'; };
+  
+  // Charts
+  const canvasChart = document.getElementById('compactChart');
+  const ctxChart = canvasChart.getContext('2d');
+  function drawMiniLine(arr, color, offsetY=0) { if(!arr || arr.length<2) return; ctxChart.beginPath(); const step = canvasChart.width/(arr.length-1); ctxChart.moveTo(0, canvasChart.height-(arr[0]/65)-offsetY); for(let i=1;i<arr.length;i++) ctxChart.lineTo(i*step, canvasChart.height-(arr[i]/65)-offsetY); ctxChart.strokeStyle=color; ctxChart.lineWidth=1.8; ctxChart.stroke(); }
+  function drawCompactChart() { ctxChart.clearRect(0,0,canvasChart.width,canvasChart.height); for(let i=0;i<4;i++){ ctxChart.beginPath(); ctxChart.moveTo(0,i*(canvasChart.height/3)); ctxChart.lineTo(canvasChart.width,i*(canvasChart.height/3)); ctxChart.strokeStyle="rgba(255,255,255,0.08)"; ctxChart.stroke(); } if(active && active.history){ drawMiniLine(active.history.maize,"#ffaa33",0); drawMiniLine(active.history.beans,"#00ff88",0); drawMiniLine(active.history.coffee,"#00aaff",0); } }
+  
+  setInterval(() => { 
+    data.forEach(d => { 
+      d.maize += Math.floor(Math.random()*100-45); 
+      d.beans += Math.floor(Math.random()*80-35); 
+      d.coffee += Math.floor(Math.random()*120-55); 
+      d.maize = Math.max(900,Math.min(4300,d.maize)); 
+      d.beans = Math.max(1300,Math.min(3700,d.beans)); 
+      d.coffee = Math.max(1900,Math.min(5900,d.coffee)); 
+      d.history.maize.push(d.maize); 
+      d.history.beans.push(d.beans); 
+      d.history.coffee.push(d.coffee); 
+      if(d.history.maize.length>20) { d.history.maize.shift(); d.history.beans.shift(); d.history.coffee.shift(); } 
+    }); 
+    renderGlobe(); 
+    drawCompactChart(); 
+    updateTopList(); 
+    renderDemoFarmsList(); 
+    if(active) updateInfo(); 
+  }, 2800);
+  
+  const alertDiv = document.createElement('div'); alertDiv.id='alertBox'; alertDiv.style.marginTop='10px'; alertDiv.style.fontSize='10px'; alertDiv.style.borderTop='1px solid rgba(0,255,136,0.2)'; alertDiv.style.paddingTop='8px'; document.getElementById('leaderboard').appendChild(alertDiv);
+  setInterval(() => { 
+    const alerts = ["🇺🇬 Uganda 3D Ripple Map active! Demo farms ready", "🔥 Click any farm point - rotation pauses then resumes", "🌍 Globe auto-rotates after 5s of inactivity", "📹 Watch Jinja AquaFarm tour now", "⭐ Fort Portal highland coffee featured"]; 
+    if(alertDiv) alertDiv.innerHTML = `<div style="animation:fadeIn 0.3s; font-size:10px;"><i class="fas fa-bell"></i> ${alerts[Math.floor(Math.random()*alerts.length)]}</div>`; 
+  }, 5500);
+  
+  // Globe grow animation
+  const globeDiv = document.getElementById('globeViz');
+  globeDiv.style.transform = 'scale(0.96)';
+  setTimeout(() => { globeDiv.style.transform = 'scale(1.24)'; setTimeout(() => { globeDiv.style.transform = 'scale(1)'; }, 1400); }, 100);
+  
+  renderGlobe(); updateInfo(); drawCompactChart(); updateTopList(); renderDemoFarmsList();
+  setTimeout(() => { globe.atmosphereColor('#00aaff').atmosphereAltitude(0.28); }, 200);
+  const faLink = document.createElement('link'); faLink.rel='stylesheet'; faLink.href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css'; document.head.appendChild(faLink);
+};
+</script>
+</body>
+</html>

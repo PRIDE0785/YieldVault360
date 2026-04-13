@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>Yield Vault 360 | AI Farmer Twin + Extension Officers</title>
+    <!-- Google Fonts & Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at 10% 20%, #0a0f1a, #03060c);
+           
+
+            color: #ffffff;
+            overflow-x: hidden;
+            font-size: 14px;
+        }
+
+        :root {
+            --pulse-gold: #FFC107;
+            --pulse-gold-dark: #FFB300;
+            --pulse-green: #00E676;
+            --harvest-green: #2E7D32;
+            --harvest-gold: #FFD700;
+            --glass-bg: rgba(18, 24, 34, 0.65);
+            --glass-border-gold: rgba(255, 193, 7, 0.25);
+            --shadow-depth: 0 20px 40px -12px rgba(0, 0, 0, 0.4);
+            --shadow-hover: 0 30px 50px -15px rgba(0, 0, 0, 0.5);
+            --transition-smooth: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); filter: blur(4px); }
+            to { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.5); }
+            50% { box-shadow: 0 0 0 18px rgba(255, 193, 7, 0); }
+        }
+
+        /* 3D Logo Animation - Growing & Shrinking */
+        @keyframes growShrink3D {
+            0% { transform: scale(1) rotateX(0deg) rotateY(0deg); text-shadow: 0 0 5px rgba(255,215,0,0.5), 0 0 10px rgba(46,125,50,0.3); }
+            25% { transform: scale(1.08) rotateX(5deg) rotateY(3deg); text-shadow: 0 0 15px rgba(255,215,0,0.8), 0 0 25px rgba(46,125,50,0.6); }
+            50% { transform: scale(1.12) rotateX(8deg) rotateY(5deg); text-shadow: 0 0 25px rgba(255,215,0,1), 0 0 35px rgba(46,125,50,0.9); }
+            75% { transform: scale(1.08) rotateX(5deg) rotateY(3deg); text-shadow: 0 0 15px rgba(255,215,0,0.8), 0 0 25px rgba(46,125,50,0.6); }
+            100% { transform: scale(1) rotateX(0deg) rotateY(0deg); text-shadow: 0 0 5px rgba(255,215,0,0.5), 0 0 10px rgba(46,125,50,0.3); }
+        }
+
+        @keyframes float3D {
+            0%, 100% { transform: translateY(0px) rotateX(0deg); }
+            50% { transform: translateY(-5px) rotateX(3deg); }
+        }
+
+        /* Animated Text Styles */
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes textGlowPulse {
+            0%, 100% { text-shadow: 0 0 10px rgba(0,230,118,0.5), 0 0 20px rgba(255,193,7,0.3); }
+            50% { text-shadow: 0 0 25px rgba(0,230,118,0.9), 0 0 40px rgba(255,193,7,0.6); }
+        }
+
+        @keyframes bounceSoft {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        @keyframes shine {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
+
+        /* Header with 3D Logo */
+        .header {
+            background: rgba(10, 15, 25, 0.85);
+            backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--glass-border-gold);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        /* 3D Animated Logo */
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #2E7D32, #FFD700, #FFC107, #1B5E20);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+            display: inline-block;
+            animation: growShrink3D 2.5s ease-in-out infinite, gradientShift 4s ease infinite;
+            transform-style: preserve-3d;
+            perspective: 500px;
+            cursor: pointer;
+            transition: filter 0.3s;
+        }
+
+        .logo h1:hover {
+            animation: growShrink3D 1.2s ease-in-out infinite, gradientShift 2s ease infinite;
+            filter: drop-shadow(0 0 15px rgba(255,215,0,0.6));
+        }
+
+        .logo h1 i {
+            background: linear-gradient(135deg, #FFD700, #FFC107, #2E7D32);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-right: 8px;
+            display: inline-block;
+            animation: float3D 2s ease-in-out infinite;
+        }
+
+        .logo span {
+            font-size: 0.7rem;
+            opacity: 0.85;
+            display: block;
+            letter-spacing: 1px;
+            background: linear-gradient(90deg, #FFD700, #00E676, #FFC107);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: shine 3s linear infinite;
+        }
+
+        .nav-links { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+        .nav-btn {
+            background: rgba(255,255,255,0.08);
+            padding: 8px 18px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            font-weight: 600;
+            font-size: 0.85rem;
+            border: 1px solid rgba(255,193,7,0.3);
+        }
+        .nav-btn:hover, .nav-btn.active { background: var(--pulse-gold); color: #0a0f18; transform: translateY(-2px); }
+
+        /* Hero Section with Animated Text */
+        .hero {
+            background: linear-gradient(135deg, rgba(0,40,30,0.7), rgba(5,15,10,0.85)), url('https://placehold.co/1600x500/0a121c/2a3a2a?text=+');
+            background-size: cover;
+            border-radius: 0 0 48px 48px;
+            padding: 50px 0;
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,193,7,0.1) 0%, transparent 70%);
+            animation: pulseGlow 4s infinite;
+        }
+
+        .hero-content { text-align: center; position: relative; z-index: 2; }
+        
+        .hero h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #FFFFFF, #FFD700, #00E676, #FFC107);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradientShift 3s ease infinite, textGlowPulse 2s ease-in-out infinite;
+        }
+
+        /* Animated AI Twin Text */
+        .animated-ai-text {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, rgba(0,230,118,0.2), rgba(255,193,7,0.2));
+            padding: 12px 28px;
+            border-radius: 80px;
+            backdrop-filter: blur(10px);
+            margin: 20px auto;
+            border: 1px solid rgba(255,193,7,0.4);
+            animation: bounceSoft 2s ease-in-out infinite, pulseGlow 2s infinite;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: fit-content;
+        }
+
+        .animated-ai-text:hover {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, rgba(0,230,118,0.35), rgba(255,193,7,0.35));
+            border-color: var(--pulse-gold);
+        }
+
+        .ai-icon {
+            font-size: 2rem;
+            animation: float3D 1.5s ease-in-out infinite;
+            filter: drop-shadow(0 0 8px rgba(255,193,7,0.6));
+        }
+
+        .ai-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFD700, #00E676, #FFC107);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradientShift 2s ease infinite;
+            letter-spacing: -0.3px;
+        }
+
+        .ai-sub {
+            font-size: 0.85rem;
+            color: rgba(255,255,200,0.8);
+            margin-top: 8px;
+        }
+
+        .hero p {
+            font-size: 1rem;
+            opacity: 0.85;
+            max-width: 700px;
+            margin: 16px auto 0;
+        }
+
+        /* Tab Content */
+        .tab-content { display: none; animation: fadeInUp 0.4s ease-out; }
+        .tab-content.active { display: block; }
+
+        /* AI Chat Section */
+        .ai-chat-container {
+            /*background: var(--glass-bg);*/
+             background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('ait.jpeg') center/cover no-repeat;
+            position: relative;
+            backdrop-filter: blur(20px);
+            border-radius: 40px;
+            padding: 24px;
+            margin-bottom: 32px;
+            border: 1px solid var(--glass-border-gold);
+        }
+        .chat-messages {
+            height: 350px;
+            overflow-y: auto;
+            padding: 16px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 28px;
+            margin-bottom: 16px;
+        }
+        .message {
+            margin-bottom: 12px;
+            padding: 10px 14px;
+            border-radius: 18px;
+            max-width: 80%;
+            font-size: 0.85rem;
+        }
+        .user-message { background: var(--pulse-gold); color: #0a0f18; margin-left: auto; border-radius: 18px 18px 4px 18px; }
+        .bot-message { background: rgba(255,255,245,0.12); color: #f0f0f0; border-radius: 18px 18px 18px 4px; }
+        .chat-input-area { display: flex; gap: 12px; }
+        .chat-input-area input {
+            flex: 1;
+            padding: 14px 18px;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,193,7,0.3);
+            border-radius: 60px;
+            color: white;
+            font-size: 0.9rem;
+        }
+        .chat-input-area button {
+            background: var(--pulse-gold);
+            border: none;
+            padding: 0 24px;
+            border-radius: 60px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* District Grid */
+        .district-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 24px 0;
+        }
+        .district-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            border-radius: 28px;
+            padding: 20px;
+            border: 1px solid var(--glass-border-gold);
+            transition: var(--transition-smooth);
+        }
+        .district-card:hover { transform: translateY(-4px); border-color: var(--pulse-gold); }
+        .district-card h3 { color: var(--pulse-gold); margin-bottom: 12px; font-size: 1.2rem; }
+        .officer-item {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,193,7,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .officer-name { font-weight: 600; }
+        .officer-contact { font-size: 0.75rem; color: #00E0FF; }
+        .book-btn {
+            background: rgba(255,193,7,0.2);
+            border: 1px solid var(--pulse-gold);
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .book-btn:hover { background: var(--pulse-gold); color: #0a0f18; }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(20px);
+            z-index: 1500;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: rgba(18,24,34,0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 32px;
+            max-width: 450px;
+            width: 90%;
+            padding: 28px;
+            border: 1px solid var(--glass-border-gold);
+        }
+        .modal-content input, .modal-content select, .modal-content textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 12px 0;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,193,7,0.3);
+            border-radius: 28px;
+            color: white;
+        }
+        .btn-primary {
+            background: var(--pulse-gold);
+            color: #0a0f18;
+            padding: 12px;
+            border-radius: 40px;
+            font-weight: 700;
+            border: none;
+            width: 100%;
+            cursor: pointer;
+        }
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(20px);
+            color: var(--pulse-gold);
+            padding: 12px 28px;
+            border-radius: 60px;
+            z-index: 1600;
+            opacity: 0;
+            transition: 0.3s;
+            font-weight: 600;
+        }
+        footer {
+            background: rgba(10,15,25,0.85);
+            backdrop-filter: blur(12px);
+            margin-top: 60px;
+            padding: 32px 0 20px;
+            border-radius: 32px 32px 0 0;
+        }
+        @media (max-width: 768px) { 
+            .navbar { flex-direction: column; text-align: center; } 
+            .hero h2 { font-size: 1.5rem; }
+            .ai-text { font-size: 1.2rem; }
+            .animated-ai-text { padding: 8px 20px; }
+            .message { max-width: 90%; }
+            .logo h1 { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="container">
+        <div class="navbar">
+            <div class="logo">
+                <h1><!--<i class="fas fa-tractor">--></i> Yield Vault 360</h1>
+                <span><i class="fas fa-chart-line"></i> Harvest More, Grow More</span>
+            </div>
+            <div class="nav-links">
+                <div class="nav-btn active" data-tab="aitwin"><!--<i class="fas fa-robot">--></i> AI Twin</div>
+                <div class="nav-btn" data-tab="officers"><i class="fas fa-user-tie"></i> Extension Officers</div>
+                <div class="nav-btn" data-tab="bookings"><i class="fas fa-calendar-check"></i> My Sessions</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <div class="animated-ai-text">
+               <!-- <i class="fas fa-brain ai-icon"></i>-->
+                <span class="ai-text">Your AI Farmer Twin</span>
+                <!--<i class="fas fa-robot ai-icon"></i>-->
+            </div>
+            <h2> Smart Farming Assistant & Expert Support</h2>
+            <p>Get instant AI advice or connect with certified Agricultural Extension Officers across all districts in Uganda</p>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <!-- AI Twin Tab -->
+    <div id="aitwinTab" class="tab-content active">
+        <div class="ai-chat-container">
+            <h3 style="margin-bottom: 16px; color: var(--pulse-gold);"><i class="fas fa-comment-dots"></i> Chat with Your AI Farmer Twin</h3>
+            <div id="chatMessages" class="chat-messages">
+                <div class="message bot-message">🌾 Hello! I'm your AI Farmer Twin. Ask me about crop diseases, planting seasons, fertilizer recommendations, market prices, or anything farming-related in Uganda!</div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chatInput" placeholder="Ask me anything about farming..." onkeypress="if(event.key==='Enter') sendMessage()">
+                <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i> Send</button>
+            </div>
+        </div>
+        <div style="background: var(--glass-bg); backdrop-filter: blur(16px); border-radius: 28px; padding: 20px; margin-top: 20px;">
+            <h4><i class="fas fa-lightbulb"></i> Quick Questions You Can Ask:</h4>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px;">
+                <span class="nav-btn" style="cursor:pointer;" onclick="askQuick('How to treat tomato blight?')">🍅 Tomato blight</span>
+                <span class="nav-btn" style="cursor:pointer;" onclick="askQuick('Best maize variety for Northern Uganda?')">🌽 Maize for North</span>
+                <span class="nav-btn" style="cursor:pointer;" onclick="askQuick('NPK fertilizer application rate?')">🌱 NPK fertilizer</span>
+                <span class="nav-btn" style="cursor:pointer;" onclick="askQuick('Planting season for beans?')">📅 Bean planting</span>
+                <span class="nav-btn" style="cursor:pointer;" onclick="askQuick('Current market price for maize?')">💰 Maize price</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Extension Officers Tab -->
+    <div id="officersTab" class="tab-content">
+        <h3 style="color: var(--pulse-gold); margin-bottom: 20px;"><i class="fas fa-map-marker-alt"></i> Agricultural Extension Officers by District</h3>
+        <div id="districtGrid" class="district-grid"></div>
+    </div>
+
+    <!-- My Bookings Tab -->
+    <div id="bookingsTab" class="tab-content">
+        <div class="ai-chat-container">
+            <h3 style="margin-bottom: 20px;"><i class="fas fa-calendar-alt"></i> Your Scheduled Sessions</h3>
+            <div id="bookingsList" style="min-height: 300px;">
+                <div style="text-align:center; padding: 40px; opacity:0.7;">No bookings yet. Schedule a session with an extension officer!</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Booking Modal -->
+<div id="bookingModal" class="modal">
+    <div class="modal-content">
+        <h3><i class="fas fa-calendar-plus"></i> Book a Session</h3>
+        <input type="hidden" id="bookingOfficerId">
+        <input type="hidden" id="bookingOfficerName">
+        <input type="hidden" id="bookingDistrict">
+        <p id="selectedOfficerInfo" style="margin: 10px 0; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 16px;"></p>
+        <input type="text" id="farmerName" placeholder="Your Full Name" required>
+        <input type="tel" id="farmerPhone" placeholder="Phone Number" required>
+        <input type="email" id="farmerEmail" placeholder="Email Address">
+        <input type="date" id="sessionDate" required>
+        <select id="sessionTime" required>
+            <option value="">Select Time</option>
+            <option value="09:00 AM">09:00 AM</option>
+            <option value="10:00 AM">10:00 AM</option>
+            <option value="11:00 AM">11:00 AM</option>
+            <option value="02:00 PM">02:00 PM</option>
+            <option value="03:00 PM">03:00 PM</option>
+            <option value="04:00 PM">04:00 PM</option>
+        </select>
+        <textarea rows="3" id="sessionTopic" placeholder="What would you like to discuss? (e.g., crop disease, soil testing, irrigation)" style="resize: none;"></textarea>
+        <button class="btn-primary" onclick="confirmBooking()"><i class="fas fa-check-circle"></i> Confirm Booking</button>
+        <button onclick="closeModal('bookingModal')" style="margin-top: 12px; background: none; border: none; color: #aaa; cursor: pointer;">Cancel</button>
+    </div>
+</div>
+
+<div id="toastMsg" class="toast">✓</div>
+
+<script>
+    // Extension Officers Data by District
+    const extensionOfficers = [
+        { id: 1, district: "Kampala", name: "Dr. Sarah Nakamya", title: "Senior Agronomist", phone: "+256 772 123456", email: "sarah.nakamya@agric.go.ug", specialty: "Urban farming, Vegetables" },
+        { id: 2, district: "Kampala", name: "Mr. John Muwanga", title: "Crop Specialist", phone: "+256 782 234567", email: "john.muwanga@agric.go.ug", specialty: "Maize, Beans" },
+        { id: 3, district: "Gulu", name: "Ms. Grace Akello", title: "Livestock Officer", phone: "+256 772 345678", email: "grace.akello@agric.go.ug", specialty: "Poultry, Cattle" },
+        { id: 4, district: "Gulu", name: "Mr. Peter Okello", title: "Agronomist", phone: "+256 782 456789", email: "peter.okello@agric.go.ug", specialty: "Cassava, Sorghum" },
+        { id: 5, district: "Mbale", name: "Dr. Rose Wamala", title: "Plant Pathologist", phone: "+256 772 567890", email: "rose.wamala@agric.go.ug", specialty: "Coffee, Banana" },
+        { id: 6, district: "Mbale", name: "Mr. James Were", title: "Soil Scientist", phone: "+256 782 678901", email: "james.were@agric.go.ug", specialty: "Soil fertility, Compost" },
+        { id: 7, district: "Mbarara", name: "Dr. Charles Mugisha", title: "Veterinarian", phone: "+256 772 789012", email: "charles.mugisha@agric.go.ug", specialty: "Dairy, Animal health" },
+        { id: 8, district: "Mbarara", name: "Ms. Annet Kyomugisha", title: "Agronomist", phone: "+256 782 890123", email: "annet.kyomugisha@agric.go.ug", specialty: "Irish potatoes, Tomatoes" },
+        { id: 9, district: "Jinja", name: "Mr. David Okwir", title: "Fisheries Officer", phone: "+256 772 901234", email: "david.okwir@agric.go.ug", specialty: "Fish farming, Aquaculture" },
+        { id: 10, district: "Jinja", name: "Dr. Patricia Nantongo", title: "Horticulturist", phone: "+256 782 012345", email: "patricia.nantongo@agric.go.ug", specialty: "Fruits, Vegetables" },
+        { id: 11, district: "Fort Portal", name: "Mr. Robert Asiimwe", title: "Coffee Specialist", phone: "+256 772 123789", email: "robert.asiimwe@agric.go.ug", specialty: "Coffee, Tea" },
+        { id: 12, district: "Fort Portal", name: "Ms. Jane Kabugho", title: "Agribusiness Advisor", phone: "+256 782 234890", email: "jane.kabugho@agric.go.ug", specialty: "Market links, Value addition" },
+        { id: 13, district: "Lira", name: "Dr. Samuel Opio", title: "Crop Scientist", phone: "+256 772 345901", email: "samuel.opio@agric.go.ug", specialty: "Rice, Groundnuts" },
+        { id: 14, district: "Lira", name: "Ms. Florence Adokorach", title: "Extension Officer", phone: "+256 782 456012", email: "florence.adokorach@agric.go.ug", specialty: "Women in farming, Nutrition" },
+        { id: 15, district: "Kabale", name: "Mr. Benon Tumwebaze", title: "Soil Conservationist", phone: "+256 772 567123", email: "benon.tumwebaze@agric.go.ug", specialty: "Terracing, Erosion control" }
+    ];
+
+    let bookings = [];
+
+    function loadBookings() {
+        const saved = localStorage.getItem('extensionBookings');
+        if (saved) { bookings = JSON.parse(saved); renderBookings(); }
+    }
+
+    function saveBookings() { localStorage.setItem('extensionBookings', JSON.stringify(bookings)); renderBookings(); }
+
+    function renderBookings() {
+        const container = document.getElementById('bookingsList');
+        if (!container) return;
+        if (bookings.length === 0) {
+            container.innerHTML = '<div style="text-align:center; padding: 40px; opacity:0.7;">📅 No bookings yet. Schedule a session with an extension officer!</div>';
+            return;
+        }
+        container.innerHTML = bookings.map((booking, idx) => `
+            <div style="background: rgba(0,0,0,0.3); border-radius: 24px; padding: 16px; margin-bottom: 12px; border-left: 4px solid var(--pulse-gold);">
+                <div style="display: flex; justify-content: space-between; flex-wrap: wrap;">
+                    <div>
+                        <strong style="color: var(--pulse-gold);">👨‍🌾 ${booking.officerName}</strong>
+                        <div style="font-size: 0.75rem;">📍 ${booking.district} | 📞 ${booking.officerPhone}</div>
+                        <div style="margin-top: 8px;"><i class="fas fa-calendar"></i> ${booking.date} at ${booking.time}</div>
+                        <div style="font-size: 0.75rem; opacity:0.8;">📋 ${booking.topic || "General consultation"}</div>
+                    </div>
+                    <div><button onclick="cancelBooking(${idx})" style="background: rgba(255,100,100,0.2); border: 1px solid #ff6666; padding: 6px 12px; border-radius: 30px; cursor: pointer;">Cancel</button></div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function cancelBooking(index) { if (confirm("Cancel this session?")) { bookings.splice(index, 1); saveBookings(); showToast("Session cancelled"); } }
+
+    function renderDistricts() {
+        const districts = [...new Map(extensionOfficers.map(o => [o.district, o])).values()].map(d => d.district).sort();
+        const container = document.getElementById('districtGrid');
+        container.innerHTML = districts.map(district => {
+            const officers = extensionOfficers.filter(o => o.district === district);
+            return `<div class="district-card"><h3><i class="fas fa-map-pin"></i> ${district}</h3>${officers.map(o => `<div class="officer-item"><div><div class="officer-name">${o.name}</div><div class="officer-contact">${o.title} | ${o.specialty}</div><div style="font-size: 0.7rem;">📞 ${o.phone}</div></div><button class="book-btn" onclick="openBookingModal(${o.id}, '${o.name}', '${o.district}', '${o.phone}', '${o.title}')"><i class="fas fa-calendar-plus"></i> Book</button></div>`).join('')}</div>`;
+        }).join('');
+    }
+
+    let currentOfficer = null;
+    function openBookingModal(id, name, district, phone, title) {
+        currentOfficer = { id, name, district, phone, title };
+        document.getElementById('bookingOfficerId').value = id;
+        document.getElementById('bookingOfficerName').value = name;
+        document.getElementById('bookingDistrict').value = district;
+        document.getElementById('selectedOfficerInfo').innerHTML = `<strong>${name}</strong><br>${title} | ${district}<br>📞 ${phone}`;
+        document.getElementById('sessionDate').value = '';
+        document.getElementById('sessionTime').value = '';
+        document.getElementById('farmerName').value = '';
+        document.getElementById('farmerPhone').value = '';
+        document.getElementById('farmerEmail').value = '';
+        document.getElementById('sessionTopic').value = '';
+        document.getElementById('bookingModal').style.display = 'flex';
+    }
+
+    function confirmBooking() {
+        const farmerName = document.getElementById('farmerName').value.trim();
+        const farmerPhone = document.getElementById('farmerPhone').value.trim();
+        const sessionDate = document.getElementById('sessionDate').value;
+        const sessionTime = document.getElementById('sessionTime').value;
+        const topic = document.getElementById('sessionTopic').value.trim();
+        if (!farmerName || !farmerPhone || !sessionDate || !sessionTime) { showToast("Please fill in all required fields"); return; }
+        const newBooking = { id: Date.now(), officerId: currentOfficer.id, officerName: currentOfficer.name, officerPhone: currentOfficer.phone, officerTitle: currentOfficer.title, district: currentOfficer.district, farmerName, farmerPhone, farmerEmail: document.getElementById('farmerEmail').value, date: sessionDate, time: sessionTime, topic: topic || "General consultation", createdAt: new Date().toISOString() };
+        bookings.push(newBooking);
+        saveBookings();
+        closeModal('bookingModal');
+        showToast(`✅ Session booked with ${currentOfficer.name} on ${sessionDate} at ${sessionTime}`);
+        const msg = `Hello ${currentOfficer.name}, I'm ${farmerName}. I've booked a session on ${sessionDate} at ${sessionTime} to discuss: ${topic || "farming consultation"}. My contact: ${farmerPhone}.`;
+        window.open(`https://wa.me/${currentOfficer.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    function getAIResponse(q) {
+        const question = q.toLowerCase();
+        if (question.includes('blight') || (question.includes('tomato') && question.includes('disease'))) return "🍅 For tomato late blight: Use copper-based fungicides. Remove infected leaves. Success rates high in Central and Western Uganda.";
+        if (question.includes('maize') && (question.includes('disease') || question.includes('pest'))) return "🌽 Maize lethal necrosis (MLN): Plant resistant varieties like Longe 5 or Longe 10H. Control aphids. In Northern Uganda, use drought-tolerant varieties.";
+        if (question.includes('fertilizer') || question.includes('npk')) return "🌱 NPK 20:10:10 for maize at planting (50kg/acre). Top-dress with Urea (50kg/acre) 4-6 weeks after planting. For vegetables, use organic compost.";
+        if (question.includes('season') || question.includes('planting')) return "📅 First planting: March-May. Second season: August-November. For Northern Uganda, consider short-season varieties.";
+        if (question.includes('price') || question.includes('market')) return "💰 Estimated prices: Maize: UGX 30,000-40,000/kg, Beans: UGX 45,000-55,000/kg, Tomatoes: UGX 15,000-25,000/crate. Prices vary by region.";
+        if (question.includes('officer') || question.includes('extension')) return "👨‍🌾 Find extension officers in the 'Extension Officers' tab. Select your district to view and book sessions with agricultural experts!";
+        return "🌾 I'm your AI Farmer Twin! I can help with: crop diseases, planting seasons, fertilizer, market prices, livestock, and connecting you with extension officers. What would you like to know?";
+    }
+
+    function sendMessage() {
+        const input = document.getElementById('chatInput');
+        const message = input.value.trim();
+        if (!message) return;
+        const chatDiv = document.getElementById('chatMessages');
+        const userMsgDiv = document.createElement('div'); userMsgDiv.className = 'message user-message'; userMsgDiv.innerHTML = `<i class="fas fa-user"></i> ${message}`;
+        chatDiv.appendChild(userMsgDiv);
+        const response = getAIResponse(message);
+        const botMsgDiv = document.createElement('div'); botMsgDiv.className = 'message bot-message'; botMsgDiv.innerHTML = `<i class="fas fa-robot"></i> ${response}`;
+        chatDiv.appendChild(botMsgDiv);
+        chatDiv.scrollTop = chatDiv.scrollHeight;
+        input.value = '';
+    }
+
+    function askQuick(question) { document.getElementById('chatInput').value = question; sendMessage(); }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+    function showToast(msg) { const t = document.getElementById('toastMsg'); t.innerText = msg; t.style.opacity = '1'; setTimeout(() => t.style.opacity = '0', 3000); }
+
+    function initTabs() {
+        document.querySelectorAll('.nav-btn[data-tab]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const tabId = btn.dataset.tab;
+                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+                document.getElementById(`${tabId}Tab`).classList.add('active');
+                if (tabId === 'officers') renderDistricts();
+                if (tabId === 'bookings') renderBookings();
+            });
+        });
+    }
+
+    window.onclick = function(event) { if (event.target.classList.contains('modal')) event.target.style.display = 'none'; };
+
+    initTabs();
+    renderDistricts();
+    loadBookings();
+</script>
+
+<footer>
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+            <div><i class="fas fa-tractor"></i> Yield Vault 360 Smart Farming Ecosystem<br>© 2026 Empowering Ugandan Farmers</div>
+            <div>📞 Support: +256 758 470261 | ✉️ yieldvault360@agri.ug</div>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

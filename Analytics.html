@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>Yield Vault 360 | Live Market Analytics</title>
+    <!-- Google Fonts & Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Chart.js with animation -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at 20% 30%, #0a0f1a, #010101);
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        :root {
+            --neon-gold: #ffd966;
+            --electric-green: #00ff88;
+            --cyber-blue: #00e0ff;
+            --hot-pink: #ff3366;
+            --purple-glow: #aa66ff;
+            --glass-bg: rgba(10, 20, 30, 0.55);
+            --glass-border: rgba(0, 255, 136, 0.3);
+        }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulseGlow { 0%,100% { box-shadow: 0 0 0 0 rgba(0,255,136,0.5); } 50% { box-shadow: 0 0 0 15px rgba(0,255,136,0); } }
+        @keyframes float3D { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-5px); } }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+        @keyframes rotate3D { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+        @keyframes blinkRed { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+        .container { max-width: 1600px; margin: 0 auto; padding: 0 20px; }
+
+        /* Header */
+        .header {
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .logo h1 {
+            font-size: 1.6rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00ff88, #ffd966, #ff3366);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: shimmer 3s infinite;
+            background-size: 200% auto;
+        }
+        .nav-links { display: flex; gap: 10px; flex-wrap: wrap; }
+        .nav-btn {
+            background: rgba(255,255,255,0.05);
+            padding: 8px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            border: 1px solid rgba(0,255,136,0.3);
+        }
+        .nav-btn:hover, .nav-btn.active { background: var(--electric-green); color: #000; transform: translateY(-2px); box-shadow: 0 0 20px rgba(0,255,136,0.5); }
+
+        /* Hero */
+        .hero {
+            text-align: center;
+            padding: 30px 0;
+            background: linear-gradient(135deg, rgba(0,255,136,0.1), rgba(255,51,102,0.05));
+            border-radius: 0 0 50px 50px;
+            margin-bottom: 30px;
+        }
+        .hero h2 { font-size: 2rem; background: linear-gradient(135deg, #fff, var(--electric-green)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+        /* KPI Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .kpi-card {
+            background: linear-gradient(135deg, rgba(0,255,136,0.1), rgba(0,0,0,0.6));
+            backdrop-filter: blur(12px);
+            border-radius: 28px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .kpi-card:hover { transform: translateY(-8px) scale(1.02); border-color: var(--electric-green); box-shadow: 0 0 30px rgba(0,255,136,0.3); }
+        .kpi-value { font-size: 2.2rem; font-weight: 800; color: var(--electric-green); animation: fadeInUp 0.5s; }
+        .live-dot { width: 10px; height: 10px; background: #ff3366; border-radius: 50%; display: inline-block; margin-left: 8px; animation: blinkRed 1s infinite; }
+
+        /* Chart Grid */
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        .chart-card {
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(16px);
+            border-radius: 32px;
+            padding: 20px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s;
+        }
+        .chart-card:hover { border-color: var(--electric-green); transform: translateY(-5px); }
+        .chart-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--neon-gold);
+            display: flex;
+            justify-content: space-between;
+        }
+        canvas { max-height: 280px; width: 100%; }
+
+        /* Live Ticker */
+        .ticker {
+            background: rgba(0,0,0,0.7);
+            border-radius: 60px;
+            padding: 12px 20px;
+            margin: 20px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            border: 1px solid var(--glass-border);
+        }
+        .ticker-content {
+            display: inline-block;
+            animation: tickerScroll 20s linear infinite;
+        }
+        .ticker-item { display: inline-block; margin: 0 25px; color: var(--electric-green); font-weight: 600; }
+        @keyframes tickerScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #000;
+            padding: 12px 28px;
+            border-radius: 60px;
+            color: var(--electric-green);
+            z-index: 2000;
+            opacity: 0;
+            transition: 0.3s;
+            font-weight: 600;
+            border: 1px solid var(--electric-green);
+        }
+        footer {
+            background: rgba(0,0,0,0.7);
+            margin-top: 50px;
+            padding: 25px 0;
+            border-radius: 30px 30px 0 0;
+            text-align: center;
+        }
+        @media (max-width: 768px) { .chart-grid { grid-template-columns: 1fr; } .kpi-value { font-size: 1.5rem; } }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="container">
+        <div class="navbar">
+            <div class="logo"><h1><i class="fas fa-chart-line"></i> Yield Vault 360</h1></div>
+            <div class="nav-links">
+                <div class="nav-btn active" data-tab="dashboard"><i class="fas fa-chart-line"></i> Live Dashboard</div>
+                <div class="nav-btn" data-tab="markets"><i class="fas fa-globe"></i> World Markets</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="hero">
+    <div class="container">
+        <h2><i class="fas fa-waveform"></i> LIVE MARKET ANALYTICS <span class="live-dot"></span></h2>
+        <p>Real-time price movements | 3D Charts | Dynamic Visuals</p>
+    </div>
+</section>
+
+<div class="container">
+    <!-- Live Ticker -->
+    <div class="ticker">
+        <div class="ticker-content" id="tickerContent"></div>
+    </div>
+
+    <!-- Dashboard Tab -->
+    <div id="dashboardTab" class="tab-content active">
+        <!-- KPI Cards -->
+        <div class="kpi-grid" id="kpiGrid"></div>
+
+        <!-- Main Charts Grid -->
+        <div class="chart-grid">
+            <div class="chart-card">
+                <div class="chart-title"><span><i class="fas fa-chart-line"></i> MAIZE PRICE (UGX/kg)</span> <span class="live-dot"></span> LIVE</div>
+                <canvas id="maizeChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title"><span><i class="fas fa-chart-line"></i> BEANS PRICE (UGX/kg)</span> <span class="live-dot"></span> LIVE</div>
+                <canvas id="beansChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-grid">
+            <div class="chart-card">
+                <div class="chart-title"><span><i class="fas fa-chart-pie"></i> MARKET SHARE</span> <span class="live-dot"></span> ROTATING</div>
+                <canvas id="pieChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title"><span><i class="fas fa-chart-simple"></i> REGIONAL PRICE INDEX</span> <span class="live-dot"></span> 3D EFFECT</div>
+                <canvas id="barChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- World Markets Tab -->
+    <div id="marketsTab" class="tab-content">
+        <div class="kpi-grid" id="worldKpiGrid"></div>
+        <div class="chart-card">
+            <div class="chart-title"><span><i class="fas fa-globe"></i> GLOBAL COMMODITY PRICES</span> <span class="live-dot"></span> LIVE</div>
+            <canvas id="globalChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<div id="toastMsg" class="toast">✓</div>
+
+<script>
+    // Live data simulation - updates every 2 seconds like crypto charts
+    let maizeData = [3500, 3200, 3800, 3950, 4020, 3980, 4000, 4120, 4080, 4150];
+    let beansData = [5200, 5300, 5280, 5350, 5420, 5380, 5400, 5120, 5400, 5500];
+    let globalData = [198, 202, 205, 208, 212, 215, 218, 222, 225, 228];
+    
+    let maizeChart, beansChart, pieChart, barChart, globalChart;
+    let currentPieIndex = 0;
+    let pieInterval;
+    
+    // Pie chart datasets that rotate
+    const pieDatasets = [
+        { labels: ['Central', 'Eastern', 'Western', 'Northern'], data: [35, 28, 22, 15], colors: ['#00ff88', '#ffd966', '#ff3366', '#00e0ff'] },
+        { labels: ['Maize', 'Beans', 'Coffee', 'Cassava'], data: [42, 28, 18, 12], colors: ['#ffd966', '#00ff88', '#ff3366', '#aa66ff'] },
+        { labels: ['Exports', 'Local', 'Processed'], data: [45, 35, 20], colors: ['#00ff88', '#ffd966', '#ff3366'] },
+        { labels: ['Kampala', 'Gulu', 'Mbale', 'Mbarara'], data: [40, 20, 25, 15], colors: ['#ffd966', '#00ff88', '#ff3366', '#00e0ff'] }
+    ];
+    
+    function updateKPIs() {
+        const latestMaize = maizeData[maizeData.length-1];
+        const latestBeans = beansData[beansData.length-1];
+        const changeMaize = ((latestMaize - maizeData[0]) / maizeData[0] * 100).toFixed(1);
+        const changeBeans = ((latestBeans - beansData[0]) / beansData[0] * 100).toFixed(1);
+        
+        document.getElementById('kpiGrid').innerHTML = `
+            <div class="kpi-card"><i class="fas fa-corn" style="font-size: 2rem;"></i><div class="kpi-value">UGX ${latestMaize.toLocaleString()}</div><div>Maize/kg <span style="color: ${changeMaize >= 0 ? '#00ff88' : '#ff3366'}">${changeMaize >= 0 ? '▲' : '▼'} ${Math.abs(changeMaize)}%</span></div></div>
+            <div class="kpi-card"><i class="fas fa-seedling" style="font-size: 2rem;"></i><div class="kpi-value">UGX ${latestBeans.toLocaleString()}</div><div>Beans/kg <span style="color: ${changeBeans >= 0 ? '#00ff88' : '#ff3366'}">${changeBeans >= 0 ? '▲' : '▼'} ${Math.abs(changeBeans)}%</span></div></div>
+            <div class="kpi-card"><i class="fas fa-chart-line"></i><div class="kpi-value">+${((latestMaize + latestBeans) / 2000).toFixed(1)}%</div><div>24h Volume Change</div></div>
+            <div class="kpi-card"><i class="fas fa-bolt"></i><div class="kpi-value">${Math.floor(Math.random() * 50 + 80)}</div><div>Market Sentiment</div></div>
+        `;
+        
+        // World Market KPIs
+        document.getElementById('worldKpiGrid').innerHTML = `
+            <div class="kpi-card"><i class="fas fa-globe"></i><div class="kpi-value">$${globalData[globalData.length-1]}</div><div>Global Maize ($/bushel)</div></div>
+            <div class="kpi-card"><i class="fas fa-mug-hot"></i><div class="kpi-value">$2.85</div><div>Coffee (lb)</div></div>
+            <div class="kpi-card"><i class="fas fa-chart-line"></i><div class="kpi-value">+3.2%</div><div>Export Demand</div></div>
+        `;
+    }
+    
+    function updateLiveTicker() {
+        const ticker = document.getElementById('tickerContent');
+        const items = [
+            `🌽 MAIZE: UGX ${maizeData[maizeData.length-1].toLocaleString()} ▲ +2.3%`,
+            `🫘 BEANS: UGX ${beansData[beansData.length-1].toLocaleString()} ▲ +1.8%`,
+            `☕ COFFEE: UGX 12,850 ▲ +5.2%`,
+            `🌾 GLOBAL MAIZE: $${globalData[globalData.length-1]} ▲ +1.5%`,
+            `📈 MARKET VOLUME: +${Math.floor(Math.random() * 10 + 2)}%`,
+            `🚜 FARMER SENTIMENT: BULLISH`
+        ];
+        ticker.innerHTML = items.map(i => `<span class="ticker-item">${i}</span>`).join('') + items.map(i => `<span class="ticker-item">${i}</span>`).join('');
+    }
+    
+    // Generate random price movement (like crypto)
+    function randomWalk(current) {
+        const change = (Math.random() - 0.48) * 400;
+        let newVal = current + change;
+        newVal = Math.max(newVal, current * 0.95);
+        newVal = Math.min(newVal, current * 1.08);
+        return Math.round(newVal);
+    }
+    
+    function updateLiveCharts() {
+        // Add new random data point
+        let newMaize = randomWalk(maizeData[maizeData.length-1]);
+        let newBeans = randomWalk(beansData[beansData.length-1]);
+        let newGlobal = randomWalk(globalData[globalData.length-1]);
+        
+        maizeData.push(newMaize);
+        beansData.push(newBeans);
+        globalData.push(newGlobal);
+        
+        if (maizeData.length > 20) maizeData.shift();
+        if (beansData.length > 20) beansData.shift();
+        if (globalData.length > 20) globalData.shift();
+        
+        // Update charts with smooth animation
+        const labels = Array.from({length: maizeData.length}, (_, i) => `${i}s ago`);
+        
+        maizeChart.data.datasets[0].data = [...maizeData];
+        beansChart.data.datasets[0].data = [...beansData];
+        globalChart.data.datasets[0].data = [...globalData];
+        
+        maizeChart.update('active');
+        beansChart.update('active');
+        globalChart.update('active');
+        
+        updateKPIs();
+        updateLiveTicker();
+    }
+    
+    // Rotating Pie Chart
+    function rotatePieChart() {
+        currentPieIndex = (currentPieIndex + 1) % pieDatasets.length;
+        const dataset = pieDatasets[currentPieIndex];
+        pieChart.data.labels = dataset.labels;
+        pieChart.data.datasets[0].data = dataset.data;
+        pieChart.data.datasets[0].backgroundColor = dataset.colors;
+        pieChart.update('active');
+        
+        // Show toast on rotation
+        const toast = document.getElementById('toastMsg');
+        toast.innerText = `🔄 Market View: ${dataset.labels[0]} + ${dataset.labels[1]}`;
+        toast.style.opacity = '1';
+        setTimeout(() => toast.style.opacity = '0', 1500);
+    }
+    
+    function initCharts() {
+        const ctxLine = document.getElementById('maizeChart').getContext('2d');
+        maizeChart = new Chart(ctxLine, {
+            type: 'line',
+            data: { labels: Array.from({length: maizeData.length}, (_, i) => `${i}s ago`), datasets: [{ label: 'Maize (UGX/kg)', data: maizeData, borderColor: '#00ff88', backgroundColor: 'rgba(0,255,136,0.1)', tension: 0.3, fill: true, pointRadius: 3, pointBackgroundColor: '#ffd966', pointBorderColor: '#fff', borderWidth: 3 }] },
+            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { labels: { color: '#fff' } }, tooltip: { mode: 'index', intersect: false } }, animation: { duration: 500 }, scales: { y: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#fff' } }, x: { ticks: { color: '#fff' } } } }
+        });
+        
+        const ctxBeans = document.getElementById('beansChart').getContext('2d');
+        beansChart = new Chart(ctxBeans, {
+            type: 'line',
+            data: { labels: Array.from({length: beansData.length}, (_, i) => `${i}s ago`), datasets: [{ label: 'Beans (UGX/kg)', data: beansData, borderColor: '#ffd966', backgroundColor: 'rgba(255,217,102,0.1)', tension: 0.3, fill: true, pointRadius: 3, pointBackgroundColor: '#00ff88', borderWidth: 3 }] },
+            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { labels: { color: '#fff' } } }, animation: { duration: 500 } }
+        });
+        
+        const ctxPie = document.getElementById('pieChart').getContext('2d');
+        pieChart = new Chart(ctxPie, {
+            type: 'pie',
+            data: { labels: pieDatasets[0].labels, datasets: [{ data: pieDatasets[0].data, backgroundColor: pieDatasets[0].colors, borderWidth: 2, borderColor: '#000' }] },
+            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { labels: { color: '#fff' }, position: 'bottom' }, tooltip: { callbacks: { label: (ctx) => `${ctx.label}: ${ctx.raw}%` } } }, animation: { animateRotate: true, duration: 800 } }
+        });
+        
+        const ctxBar = document.getElementById('barChart').getContext('2d');
+        barChart = new Chart(ctxBar, {
+            type: 'bar',
+            data: { labels: ['Central', 'Eastern', 'Western', 'Northern'], datasets: [{ label: 'Maize Price (UGX/kg)', data: [39800, 38200, 37800, 35800], backgroundColor: '#00ff88', borderRadius: 12, barPercentage: 0.6 }, { label: 'Beans Price (UGX/kg)', data: [53500, 51800, 52500, 49500], backgroundColor: '#ffd966', borderRadius: 12, barPercentage: 0.6 }] },
+            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { labels: { color: '#fff' } } }, animation: { duration: 600 }, scales: { y: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#fff' } }, x: { ticks: { color: '#fff' } } } }
+        });
+        
+        const ctxGlobal = document.getElementById('globalChart').getContext('2d');
+        globalChart = new Chart(ctxGlobal, {
+            type: 'line',
+            data: { labels: Array.from({length: globalData.length}, (_, i) => `${i}s ago`), datasets: [{ label: 'Global Maize ($/bushel)', data: globalData, borderColor: '#ff3366', backgroundColor: 'rgba(255,51,102,0.1)', tension: 0.3, fill: true, pointRadius: 4, pointBackgroundColor: '#00ff88', borderWidth: 3 }] },
+            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { labels: { color: '#fff' } } }, animation: { duration: 500 } }
+        });
+    }
+    
+    // Simulate random bar chart updates
+    function updateBarChartRandom() {
+        setInterval(() => {
+            const newData = [
+                Math.floor(Math.random() * 5000 + 36000),
+                Math.floor(Math.random() * 5000 + 35000),
+                Math.floor(Math.random() * 5000 + 34000),
+                Math.floor(Math.random() * 5000 + 32000)
+            ];
+            const newBeansData = [
+                Math.floor(Math.random() * 5000 + 50000),
+                Math.floor(Math.random() * 5000 + 48000),
+                Math.floor(Math.random() * 5000 + 49000),
+                Math.floor(Math.random() * 5000 + 46000)
+            ];
+            if (barChart) {
+                barChart.data.datasets[0].data = newData;
+                barChart.data.datasets[1].data = newBeansData;
+                barChart.update('active');
+            }
+        }, 8000);
+    }
+    
+    // Tab switching
+    function initTabs() {
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const tabId = btn.dataset.tab;
+                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+                document.getElementById(`${tabId}Tab`).classList.add('active');
+            });
+        });
+    }
+    
+    // Live updates every 2 seconds (crypto-style)
+    let liveInterval;
+    function startLiveUpdates() {
+        liveInterval = setInterval(() => {
+            updateLiveCharts();
+        }, 2000);
+    }
+    
+    // Start pie chart rotation every 5 seconds
+    function startPieRotation() {
+        pieInterval = setInterval(() => {
+            rotatePieChart();
+        }, 5000);
+    }
+    
+    // Initialize everything
+    window.addEventListener('load', () => {
+        initTabs();
+        initCharts();
+        updateKPIs();
+        updateLiveTicker();
+        startLiveUpdates();
+        startPieRotation();
+        updateBarChartRandom();
+        
+        // Initial toast
+        setTimeout(() => {
+            const toast = document.getElementById('toastMsg');
+            toast.innerText = '🚀 LIVE MARKET DATA ACTIVE | Charts update every 2 seconds';
+            toast.style.opacity = '1';
+            setTimeout(() => toast.style.opacity = '0', 3000);
+        }, 1000);
+    });
+</script>
+
+<footer>
+    <div class="container">
+        <div><i class="fas fa-chart-line"></i> Yield Vault 360 — LIVE Market Analytics | Real-time Data | 3D Visuals</div>
+        <div style="margin-top: 10px;">📊 Prices update every 2 seconds • Rotating pie charts • Dynamic bar graphs</div>
+    </div>
+</footer>
+</body>
+</html>

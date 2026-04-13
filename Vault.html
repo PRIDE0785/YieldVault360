@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>Yield Vault | Secure Farmers' Savings</title>
+    <!-- Google Fonts & Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+           /* background: radial-gradient(circle at 10% 20%, #0a0f1a, #03060c);*/
+           
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1500382017468-9049fed747ef') center/cover no-repeat;
+            position: relative;
+
+            color: #ffffff;
+            overflow-x: hidden;
+            font-size: 14px;
+        }
+
+        :root {
+            --pulse-gold: #FFC107;
+            --pulse-gold-dark: #FFB300;
+            --pulse-cyan: #00E0FF;
+            --pulse-green: #00E676;
+            --glass-bg: rgba(18, 24, 34, 0.65);
+            --glass-border-gold: rgba(255, 193, 7, 0.25);
+            --shadow-depth: 0 20px 40px -12px rgba(0, 0, 0, 0.4);
+            --shadow-hover: 0 30px 50px -15px rgba(0, 0, 0, 0.5);
+            --transition-smooth: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); filter: blur(4px); }
+            to { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.5); }
+            50% { box-shadow: 0 0 0 18px rgba(255, 193, 7, 0); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
+
+        /* Header */
+        .header {
+            background: rgba(10, 15, 25, 0.85);
+            backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--glass-border-gold);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFF8E7, var(--pulse-gold));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .logo h1 i { background: linear-gradient(135deg, var(--pulse-gold), #FFE57F); -webkit-background-clip: text; background-clip: text; color: transparent; margin-right: 8px; }
+        .logo span { font-size: 0.65rem; opacity: 0.8; display: block; }
+
+        .nav-links { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+        .nav-btn {
+            background: rgba(255,255,255,0.08);
+            padding: 8px 18px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            font-weight: 600;
+            font-size: 0.85rem;
+            border: 1px solid rgba(255,193,7,0.3);
+        }
+        .nav-btn:hover, .nav-btn.active { background: var(--pulse-gold); color: #0a0f18; transform: translateY(-2px); }
+        .cart-icon {
+            position: relative;
+            background: rgba(255,255,255,0.08);
+            padding: 8px 18px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            border: 1px solid rgba(255,193,7,0.3);
+        }
+        .cart-count { position: absolute; top: -8px; right: -8px; background: var(--pulse-gold); color: #0a0f18; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold; }
+
+        /* Hero Stats */
+        .hero {
+            background: linear-gradient(135deg, rgba(0,40,30,0.7), rgba(5,15,10,0.85));
+            border-radius: 0 0 48px 48px;
+            padding: 40px 0;
+            margin-bottom: 32px;
+        }
+        .hero-content { text-align: center; }
+        .hero h2 { font-size: 2rem; background: linear-gradient(135deg, #FFF, var(--pulse-gold)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .hero-stats { display: flex; justify-content: center; gap: 30px; margin-top: 24px; flex-wrap: wrap; }
+        .stat { background: rgba(20,28,38,0.6); backdrop-filter: blur(12px); padding: 12px 24px; border-radius: 60px; border: 1px solid rgba(255,193,7,0.2); }
+        .stat .number { font-size: 1.6rem; font-weight: 800; color: var(--pulse-gold); }
+
+        /* PIN Overlay - Compact & Centered */
+        .pin-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(16px);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.4s ease;
+        }
+
+        .pin-container {
+            background: rgba(18, 24, 34, 0.98);
+            backdrop-filter: blur(25px);
+            border-radius: 40px;
+            padding: 40px 40px;
+            text-align: center;
+            max-width: 360px;
+            width: 90%;
+            border: 1px solid var(--glass-border-gold);
+            box-shadow: var(--shadow-depth);
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .pin-container i {
+            font-size: 2.8rem;
+            color: var(--pulse-gold);
+            margin-bottom: 12px;
+        }
+
+        .pin-container h2 {
+            font-size: 1.4rem;
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+
+        .pin-container p {
+            opacity: 0.65;
+            margin-bottom: 20px;
+            font-size: 0.8rem;
+        }
+
+        .pin-input-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .pin-digit {
+            width: 48px;
+            height: 58px;
+            background: rgba(0,0,0,0.5);
+            border: 2px solid rgba(255,193,7,0.3);
+            border-radius: 16px;
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--pulse-gold);
+            font-family: monospace;
+            transition: all 0.2s;
+        }
+
+        .pin-digit:focus {
+            outline: none;
+            border-color: var(--pulse-gold);
+            box-shadow: 0 0 15px rgba(255,193,7,0.3);
+        }
+
+        .pin-keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0 16px;
+        }
+
+        .keypad-btn {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,193,7,0.2);
+            border-radius: 50px;
+            padding: 12px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .keypad-btn:hover {
+            background: var(--pulse-gold);
+            color: #0a0f18;
+            transform: scale(1.05);
+        }
+
+        .pin-error {
+            color: #ff6b6b;
+            font-size: 0.75rem;
+            margin-top: 10px;
+            animation: shake 0.3s ease;
+        }
+
+        .unlock-btn {
+            background: linear-gradient(105deg, var(--pulse-gold), #FFB300);
+            color: #0a0f18;
+            padding: 10px;
+            border-radius: 50px;
+            font-weight: 700;
+            border: none;
+            width: 100%;
+            cursor: pointer;
+            margin-top: 8px;
+            font-size: 0.9rem;
+            transition: var(--transition-smooth);
+        }
+
+        .unlock-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255,193,7,0.3);
+        }
+
+        /* Main Content - Initially Hidden */
+        .main-content {
+            display: none;
+        }
+
+        /* Tab Content */
+        .tab-content { display: none; animation: fadeInUp 0.4s ease-out; }
+        .tab-content.active { display: block; }
+
+        /* Vault Dashboard Cards */
+        .vault-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        .vault-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            border-radius: 32px;
+            padding: 24px;
+            border: 1px solid var(--glass-border-gold);
+            transition: var(--transition-smooth);
+            text-align: center;
+        }
+        .vault-card:hover { transform: translateY(-4px); border-color: var(--pulse-gold); }
+        .vault-card h3 { font-size: 0.9rem; opacity: 0.8; margin-bottom: 12px; }
+        .vault-amount { font-size: 2.2rem; font-weight: 800; color: var(--pulse-gold); }
+        .vault-sub { font-size: 0.75rem; opacity: 0.7; margin-top: 8px; }
+
+        /* Action Buttons Grid */
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 16px;
+            margin: 32px 0;
+        }
+        .action-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border-gold);
+            border-radius: 60px;
+            padding: 14px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            font-weight: 600;
+        }
+        .action-btn:hover { background: var(--pulse-gold); color: #0a0f18; transform: translateY(-3px); border-color: transparent; }
+        .action-btn i { font-size: 1.4rem; display: block; margin-bottom: 8px; }
+
+        /* Goals Section */
+        .goals-container {
+            background: radial-gradient(circle at 10% 20%, #0a0f1a, #03060c);
+           /* background: var(--glass-bg);*/
+            backdrop-filter: blur(16px);
+            border-radius: 32px;
+            padding: 24px;
+            margin: 32px 0;
+            border: 1px solid var(--glass-border-gold);
+        }
+        .goals-list { display: flex; flex-direction: column; gap: 16px; margin-top: 20px; }
+        .goal-item {
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .goal-info h4 { margin-bottom: 4px; }
+        .goal-progress { width: 200px; height: 8px; background: rgba(255,255,255,0.2); border-radius: 10px; overflow: hidden; }
+        .goal-progress-fill { height: 100%; background: var(--pulse-gold); border-radius: 10px; transition: width 0.3s; }
+        .goal-actions button { background: none; border: none; color: var(--pulse-gold); cursor: pointer; margin-left: 12px; font-size: 1rem; transition: 0.2s; }
+        .goal-actions button:hover { transform: scale(1.1); }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(20px);
+            z-index: 1500;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: rgba(18,24,34,0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 32px;
+            max-width: 450px;
+            width: 90%;
+            padding: 28px;
+            border: 1px solid var(--glass-border-gold);
+        }
+        .modal-content input, .modal-content select {
+            width: 100%;
+            padding: 12px;
+            margin: 12px 0;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,193,7,0.3);
+            border-radius: 28px;
+            color: white;
+        }
+        .btn-primary {
+            background: var(--pulse-gold);
+            color: #0a0f18;
+            padding: 12px;
+            border-radius: 40px;
+            font-weight: 700;
+            border: none;
+            width: 100%;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(20px);
+            color: var(--pulse-gold);
+            padding: 12px 28px;
+            border-radius: 60px;
+            z-index: 1600;
+            opacity: 0;
+            transition: 0.3s;
+            font-weight: 600;
+        }
+        footer {
+            background: rgba(10,15,25,0.85);
+            backdrop-filter: blur(12px);
+            margin-top: 60px;
+            padding: 32px 0 20px;
+            border-radius: 32px 32px 0 0;
+        }
+        @media (max-width: 768px) { 
+            .navbar { flex-direction: column; } 
+            .hero h2 { font-size: 1.5rem; } 
+            .goal-progress { width: 100%; } 
+            .pin-digit { width: 42px; height: 52px; font-size: 1.5rem; }
+            .pin-container { padding: 20px 24px; max-width: 320px; }
+            .pin-keypad { gap: 8px; }
+            .keypad-btn { padding: 10px; font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- PIN Security Overlay - Compact & Centered -->
+<div id="pinOverlay" class="pin-overlay">
+    <div class="pin-container">
+        <i class="fas fa-shield-alt"></i>
+        <h2>🔐 Secure Vault</h2>
+        <p>Enter 4-digit PIN to access</p>
+        <div class="pin-input-group">
+            <input type="password" maxlength="1" class="pin-digit" id="pin1" oninput="moveToNext(this, 'pin2')">
+            <input type="password" maxlength="1" class="pin-digit" id="pin2" oninput="moveToNext(this, 'pin3')">
+            <input type="password" maxlength="1" class="pin-digit" id="pin3" oninput="moveToNext(this, 'pin4')">
+            <input type="password" maxlength="1" class="pin-digit" id="pin4" oninput="moveToNext(this, null)">
+        </div>
+        <div class="pin-keypad">
+            <div class="keypad-btn" onclick="enterDigit('1')">1</div>
+            <div class="keypad-btn" onclick="enterDigit('2')">2</div>
+            <div class="keypad-btn" onclick="enterDigit('3')">3</div>
+            <div class="keypad-btn" onclick="enterDigit('4')">4</div>
+            <div class="keypad-btn" onclick="enterDigit('5')">5</div>
+            <div class="keypad-btn" onclick="enterDigit('6')">6</div>
+            <div class="keypad-btn" onclick="enterDigit('7')">7</div>
+            <div class="keypad-btn" onclick="enterDigit('8')">8</div>
+            <div class="keypad-btn" onclick="enterDigit('9')">9</div>
+            <div class="keypad-btn" onclick="clearPin()"><i class="fas fa-backspace"></i></div>
+            <div class="keypad-btn" onclick="enterDigit('0')">0</div>
+            <div class="keypad-btn" onclick="unlockVault()"><i class="fas fa-check"></i></div>
+        </div>
+        <button class="unlock-btn" onclick="unlockVault()"><i class="fas fa-unlock-alt"></i> Unlock Vault</button>
+        <div id="pinError" class="pin-error" style="display: none;">❌ Incorrect PIN (Demo: 0060)</div>
+    </div>
+</div>
+
+<!-- Main Content - Hidden until PIN verified -->
+<div class="main-content" id="mainContent">
+    <div class="header">
+        <div class="container">
+            <div class="navbar">
+                <div class="logo">
+                    <h1> Yield Vault</h1>
+                    <span><i class="fas fa-hand-holding-usd"></i> Save | Grow | Invest</span>
+                </div>
+                <div class="nav-links">
+                    <div class="nav-btn active" data-tab="vault"> My Vault</div>
+                    <div class="nav-btn" data-tab="marketplace"><i class="fas fa-store"></i> Marketplace</div>
+                    <div class="nav-btn" data-tab="sell"><i class="fas fa-plus-circle"></i> Sell</div>
+                    <div class="cart-icon" id="cartIcon"><i class="fas fa-shopping-cart"></i> Cart <span class="cart-count" id="cartCount">0</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h2></i> Farmers' Vault | Secure Your Harvest</h2>
+                <p>Deposit earnings, lock savings goals, buy inputs directly from your vault</p>
+                <div class="hero-stats">
+                    <div class="stat"><span class="number" id="totalSaved">0</span><br>Total Saved (UGX)</div>
+                    <div class="stat"><span class="number" id="activeGoals">0</span><br>Active Goals</div>
+                    <div class="stat"><span class="number" id="investedInputs">0</span><br>Inputs Purchased</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <!-- Vault Tab -->
+        <div id="vaultTab" class="tab-content active">
+            <div class="vault-dashboard">
+                <div class="vault-card"><h3><i class="fas fa-wallet"></i> Available Balance</h3><div class="vault-amount" id="availableBalance">UGX 0</div><div class="vault-sub">Ready to use</div></div>
+                <div class="vault-card"><h3><i class="fas fa-lock"></i> Locked in Goals</h3><div class="vault-amount" id="lockedBalance">UGX 0</div><div class="vault-sub">Towards your dreams</div></div>
+                <div class="vault-card"><h3><i class="fas fa-chart-line"></i> Total Savings</h3><div class="vault-amount" id="totalBalance">UGX 0</div><div class="vault-sub">Available + Locked</div></div>
+            </div>
+
+            <div class="action-grid">
+                <div class="action-btn" onclick="openModal('depositModal')"><i class="fas fa-arrow-down"></i> Deposit</div>
+                <div class="action-btn" onclick="openModal('withdrawModal')"><i class="fas fa-arrow-up"></i> Withdraw</div>
+                <div class="action-btn" onclick="openModal('goalModal')"><i class="fas fa-bullseye"></i> New Goal</div>
+                <div class="action-btn" onclick="openModal('convertModal')"><i class="fas fa-exchange-alt"></i> Convert to Inputs</div>
+                <div class="action-btn" onclick="openModal('hireEquipmentModal')"><i class="fas fa-tractor"></i> Hire Equipment</div>
+                <div class="action-btn" onclick="lockVault()"><i class="fas fa-lock"></i> Lock Vault</div>
+            </div>
+
+            <div class="goals-container">
+                <h3><i class="fas fa-flag-checkered"></i> Your Savings Goals</h3>
+                <div id="goalsList" class="goals-list"><div style="text-align:center; opacity:0.6;">✨ No goals yet. Create one to start saving!</div></div>
+            </div>
+
+            <div class="goals-container">
+                <h3><i class="fas fa-history"></i> Recent Activity</h3>
+                <div id="transactionsList" style="max-height:200px; overflow-y:auto;"><div style="text-align:center; opacity:0.6;">No transactions yet</div></div>
+            </div>
+        </div>
+
+        <div id="marketplaceTab" class="tab-content"><div style="text-align:center; padding:60px;"><i class="fas fa-store" style="font-size:4rem; color:var(--pulse-gold);"></i><h3 style="margin:20px 0;">Marketplace Coming Soon</h3><p>Use vault funds to buy inputs & hire equipment directly!</p></div></div>
+        <div id="sellTab" class="tab-content"><div style="text-align:center; padding:60px;"><i class="fas fa-plus-circle" style="font-size:4rem; color:var(--pulse-gold);"></i><h3 style="margin:20px 0;">Sell Your Produce</h3><p>After selling, deposit earnings directly to vault.</p></div></div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+                <div><i class="fas fa-vault"></i> Yield Vault — PIN Protected Farmers' Savings<br>© 2026 Save | Grow | Invest</div>
+                <div>📞 Support: +256 758 470261 | ✉️ vault@yeild.ug</div>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<!-- Modals -->
+<div id="depositModal" class="modal"><div class="modal-content"><h3><i class="fas fa-arrow-down"></i> Deposit to Vault</h3><input type="number" id="depositAmount" placeholder="Amount (UGX)" min="1000"><button class="btn-primary" onclick="deposit()">Confirm Deposit</button><button onclick="closeModal('depositModal')" style="margin-top:10px; background:none; border:none; color:#aaa;">Cancel</button></div></div>
+<div id="withdrawModal" class="modal"><div class="modal-content"><h3><i class="fas fa-arrow-up"></i> Withdraw Funds</h3><input type="number" id="withdrawAmount" placeholder="Amount (UGX)" min="1000"><button class="btn-primary" onclick="withdraw()">Confirm Withdraw</button><button onclick="closeModal('withdrawModal')" style="margin-top:10px; background:none; border:none; color:#aaa;">Cancel</button></div></div>
+<div id="goalModal" class="modal"><div class="modal-content"><h3><i class="fas fa-bullseye"></i> Create Savings Goal</h3><input type="text" id="goalName" placeholder="Goal name (e.g., Buy Tractor, School Fees)"><input type="number" id="goalTarget" placeholder="Target Amount (UGX)"><button class="btn-primary" onclick="createGoal()">Start Saving</button><button onclick="closeModal('goalModal')" style="margin-top:10px; background:none; border:none; color:#aaa;">Cancel</button></div></div>
+<div id="convertModal" class="modal"><div class="modal-content"><h3><i class="fas fa-seedling"></i> Convert Savings to Inputs</h3><select id="inputSelect"><option value="Maize Seed (50kg) - 120000">🌽 Maize Seed (50kg) - UGX 120,000</option><option value="NPK Fertilizer (50kg) - 165000">🌱 NPK Fertilizer (50kg) - UGX 165,000</option><option value="Tomato Seedlings (tray) - 45000">🍅 Tomato Seedlings (tray) - UGX 45,000</option><option value="Organic Compost - 68000">🪴 Organic Compost - UGX 68,000</option></select><button class="btn-primary" onclick="convertToInput()">Purchase with Vault</button><button onclick="closeModal('convertModal')" style="margin-top:10px; background:none; border:none; color:#aaa;">Cancel</button></div></div>
+<div id="hireEquipmentModal" class="modal"><div class="modal-content"><h3><i class="fas fa-tractor"></i> Hire Equipment</h3><select id="equipmentSelect"><option value="Tractor - 165000">🚜 Tractor - UGX 165,000/day</option><option value="Combine Harvester - 445000">🌾 Combine Harvester - UGX 445,000/day</option><option value="Sprayer Drone - 315000">🚁 Sprayer Drone - UGX 315,000/day</option></select><input type="number" id="hireDays" placeholder="Number of days" min="1" value="1"><button class="btn-primary" onclick="hireEquipment()">Pay from Vault</button><button onclick="closeModal('hireEquipmentModal')" style="margin-top:10px; background:none; border:none; color:#aaa;">Cancel</button></div></div>
+
+<div id="toastMsg" class="toast">✓</div>
+
+<script>
+    // CORRECT PIN: 0060
+    const CORRECT_PIN = "0060";
+    let vaultUnlocked = false;
+    
+    // Vault State
+    let vault = {
+        available: 125000,
+        goals: [],
+        transactions: []
+    };
+
+    // PIN Handling
+    function moveToNext(current, nextId) {
+        if (current.value.length === 1 && nextId) {
+            document.getElementById(nextId).focus();
+        }
+    }
+
+    function enterDigit(digit) {
+        const inputs = ['pin1', 'pin2', 'pin3', 'pin4'];
+        for (let i = 0; i < inputs.length; i++) {
+            if (document.getElementById(inputs[i]).value === '') {
+                document.getElementById(inputs[i]).value = digit;
+                if (i < 3) document.getElementById(inputs[i+1]).focus();
+                break;
+            }
+        }
+    }
+
+    function clearPin() {
+        const inputs = ['pin1', 'pin2', 'pin3', 'pin4'];
+        for (let i = inputs.length - 1; i >= 0; i--) {
+            if (document.getElementById(inputs[i]).value !== '') {
+                document.getElementById(inputs[i]).value = '';
+                document.getElementById(inputs[i]).focus();
+                break;
+            }
+        }
+    }
+
+    function unlockVault() {
+        const pin = document.getElementById('pin1').value + 
+                    document.getElementById('pin2').value + 
+                    document.getElementById('pin3').value + 
+                    document.getElementById('pin4').value;
+        
+        if (pin === CORRECT_PIN) {
+            vaultUnlocked = true;
+            document.getElementById('pinOverlay').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+            loadVault();
+            showToast("🔓 Vault unlocked successfully!");
+        } else {
+            const errorDiv = document.getElementById('pinError');
+            errorDiv.style.display = 'block';
+            clearPin();
+            document.getElementById('pin1').focus();
+            setTimeout(() => { errorDiv.style.display = 'none'; }, 2000);
+        }
+    }
+
+    function lockVault() {
+        if (confirm("Lock vault? You'll need to enter PIN again to access.")) {
+            vaultUnlocked = false;
+            document.getElementById('mainContent').style.display = 'none';
+            document.getElementById('pinOverlay').style.display = 'flex';
+            clearPin();
+            document.getElementById('pin1').focus();
+            showToast("🔒 Vault locked. Enter PIN to continue.");
+        }
+    }
+
+    function loadVault() {
+        const saved = localStorage.getItem('pulseVault');
+        if (saved) {
+            vault = JSON.parse(saved);
+        } else {
+            vault.transactions = [
+                { id: Date.now(), type: 'deposit', amount: 50000, date: new Date().toLocaleDateString(), description: 'Deposit from maize sale' },
+                { id: Date.now()+1, type: 'deposit', amount: 75000, date: new Date().toLocaleDateString(), description: 'Deposit from tomato harvest' }
+            ];
+            saveVault();
+        }
+        updateUI();
+    }
+
+    function saveVault() {
+        localStorage.setItem('pulseVault', JSON.stringify(vault));
+        updateUI();
+    }
+
+    function updateUI() {
+        const lockedTotal = vault.goals.reduce((sum, g) => sum + g.saved, 0);
+        const total = vault.available + lockedTotal;
+        document.getElementById('availableBalance').innerHTML = `UGX ${vault.available.toLocaleString()}`;
+        document.getElementById('lockedBalance').innerHTML = `UGX ${lockedTotal.toLocaleString()}`;
+        document.getElementById('totalBalance').innerHTML = `UGX ${total.toLocaleString()}`;
+        document.getElementById('totalSaved').innerHTML = `UGX ${total.toLocaleString()}`;
+        document.getElementById('activeGoals').innerHTML = vault.goals.length;
+        document.getElementById('investedInputs').innerHTML = vault.transactions.filter(t => t.type === 'convert' || t.type === 'hire').length;
+        
+        renderGoals();
+        renderTransactions();
+    }
+
+    function renderGoals() {
+        const container = document.getElementById('goalsList');
+        if (!vault.goals.length) {
+            container.innerHTML = '<div style="text-align:center; opacity:0.6;">✨ No goals yet. Create one to start saving!</div>';
+            return;
+        }
+        container.innerHTML = vault.goals.map(goal => {
+            const progress = (goal.saved / goal.target) * 100;
+            return `
+                <div class="goal-item">
+                    <div class="goal-info">
+                        <h4>🎯 ${goal.name}</h4>
+                        <small>UGX ${goal.saved.toLocaleString()} / ${goal.target.toLocaleString()}</small>
+                        <div class="goal-progress"><div class="goal-progress-fill" style="width: ${Math.min(progress,100)}%"></div></div>
+                    </div>
+                    <div class="goal-actions">
+                        <button onclick="contributeToGoal(${goal.id})"><i class="fas fa-plus-circle"></i> Add</button>
+                        <button onclick="withdrawFromGoal(${goal.id})" style="color:#ffaa44;"><i class="fas fa-minus-circle"></i> Take</button>
+                        <button onclick="deleteGoal(${goal.id})" style="color:#ff6666;"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function renderTransactions() {
+        const container = document.getElementById('transactionsList');
+        if (!vault.transactions.length) {
+            container.innerHTML = '<div style="text-align:center; opacity:0.6;">No transactions yet</div>';
+            return;
+        }
+        container.innerHTML = vault.transactions.slice(0, 10).map(t => `
+            <div style="display:flex; justify-content:space-between; padding:12px; border-bottom:1px solid rgba(255,193,7,0.1);">
+                <div><i class="fas ${t.type === 'deposit' ? 'fa-arrow-down' : t.type === 'withdraw' ? 'fa-arrow-up' : 'fa-exchange-alt'}"></i> ${t.description}</div>
+                <div style="color: ${t.type === 'deposit' ? '#00E676' : t.type === 'withdraw' ? '#FFB300' : '#FFC107'}">${t.type === 'deposit' ? '+' : '-'} UGX ${t.amount.toLocaleString()}</div>
+            </div>
+        `).join('');
+    }
+
+    function addTransaction(type, amount, description) {
+        vault.transactions.unshift({
+            id: Date.now(),
+            type: type,
+            amount: amount,
+            date: new Date().toLocaleDateString(),
+            description: description
+        });
+        saveVault();
+    }
+
+    window.deposit = function() {
+        const amount = parseInt(document.getElementById('depositAmount').value);
+        if (isNaN(amount) || amount < 1000) { showToast("Enter valid amount (min UGX 1,000)"); return; }
+        vault.available += amount;
+        addTransaction('deposit', amount, `Deposit to vault - UGX ${amount.toLocaleString()}`);
+        closeModal('depositModal');
+        document.getElementById('depositAmount').value = '';
+        showToast(`✅ UGX ${amount.toLocaleString()} deposited!`);
+    };
+
+    window.withdraw = function() {
+        const amount = parseInt(document.getElementById('withdrawAmount').value);
+        if (isNaN(amount) || amount < 1000) { showToast("Enter valid amount"); return; }
+        if (amount > vault.available) { showToast("❌ Insufficient available balance"); return; }
+        vault.available -= amount;
+        addTransaction('withdraw', amount, `Withdrawal - UGX ${amount.toLocaleString()}`);
+        closeModal('withdrawModal');
+        document.getElementById('withdrawAmount').value = '';
+        showToast(`💰 UGX ${amount.toLocaleString()} withdrawn`);
+    };
+
+    window.createGoal = function() {
+        const name = document.getElementById('goalName').value.trim();
+        const target = parseInt(document.getElementById('goalTarget').value);
+        if (!name || isNaN(target) || target < 1000) { showToast("Enter goal name and target (min UGX 1,000)"); return; }
+        vault.goals.push({ id: Date.now(), name: name, target: target, saved: 0 });
+        closeModal('goalModal');
+        document.getElementById('goalName').value = '';
+        document.getElementById('goalTarget').value = '';
+        showToast(`🎯 Goal "${name}" created!`);
+        saveVault();
+    };
+
+    window.contributeToGoal = function(goalId) {
+        let amount = prompt("How much to add to this goal? (UGX)");
+        amount = parseInt(amount);
+        if (isNaN(amount) || amount < 1000) { showToast("Enter valid amount (min 1,000 UGX)"); return; }
+        if (amount > vault.available) { showToast("❌ Not enough available balance"); return; }
+        const goal = vault.goals.find(g => g.id === goalId);
+        if (goal) {
+            const canAdd = Math.min(amount, goal.target - goal.saved);
+            if (canAdd <= 0) { showToast("Goal already reached!"); return; }
+            goal.saved += canAdd;
+            vault.available -= canAdd;
+            addTransaction('goal', canAdd, `Added to goal: ${goal.name} - UGX ${canAdd.toLocaleString()}`);
+            if (goal.saved >= goal.target) showToast(`🎉 Congratulations! Goal "${goal.name}" achieved! 🎉`);
+            else showToast(`✨ Added UGX ${canAdd.toLocaleString()} to "${goal.name}"`);
+            saveVault();
+        }
+    };
+
+    window.withdrawFromGoal = function(goalId) {
+        let amount = prompt("How much to take from this goal? (UGX)");
+        amount = parseInt(amount);
+        if (isNaN(amount) || amount < 1000) { showToast("Enter valid amount"); return; }
+        const goal = vault.goals.find(g => g.id === goalId);
+        if (goal && goal.saved >= amount) {
+            goal.saved -= amount;
+            vault.available += amount;
+            addTransaction('goal_withdraw', amount, `Withdrawn from goal: ${goal.name} - UGX ${amount.toLocaleString()}`);
+            showToast(`💸 UGX ${amount.toLocaleString()} moved to available balance`);
+            saveVault();
+        } else { showToast("Insufficient savings in this goal"); }
+    };
+
+    window.deleteGoal = function(goalId) {
+        if (confirm("Delete this goal? Any saved funds will move to available balance.")) {
+            const goal = vault.goals.find(g => g.id === goalId);
+            if (goal && goal.saved > 0) {
+                vault.available += goal.saved;
+                addTransaction('goal_delete', goal.saved, `Goal "${goal.name}" deleted - funds returned`);
+            }
+            vault.goals = vault.goals.filter(g => g.id !== goalId);
+            showToast("Goal removed");
+            saveVault();
+        }
+    };
+
+    window.convertToInput = function() {
+        const selected = document.getElementById('inputSelect').value;
+        const priceMatch = selected.match(/(\d+)/g);
+        const price = priceMatch ? parseInt(priceMatch[priceMatch.length-1]) : 50000;
+        if (price > vault.available) { showToast(`❌ Need UGX ${price.toLocaleString()} available. Add funds or withdraw from goals.`); return; }
+        vault.available -= price;
+        addTransaction('convert', price, `Purchased: ${selected.split(' - ')[0]} with vault funds`);
+        closeModal('convertModal');
+        showToast(`🌱 Success! ${selected.split(' - ')[0]} purchased. Check your order.`);
+        saveVault();
+    };
+
+    window.hireEquipment = function() {
+        const selected = document.getElementById('equipmentSelect').value;
+        const days = parseInt(document.getElementById('hireDays').value) || 1;
+        const priceMatch = selected.match(/(\d+)/g);
+        const dailyPrice = priceMatch ? parseInt(priceMatch[0]) : 100000;
+        const totalPrice = dailyPrice * days;
+        if (totalPrice > vault.available) { showToast(`❌ Need UGX ${totalPrice.toLocaleString()} available.`); return; }
+        vault.available -= totalPrice;
+        addTransaction('hire', totalPrice, `Hired: ${selected.split(' - ')[0]} for ${days} day(s) - UGX ${totalPrice.toLocaleString()}`);
+        closeModal('hireEquipmentModal');
+        showToast(`🚜 Equipment hired! Total UGX ${totalPrice.toLocaleString()} paid.`);
+        saveVault();
+    };
+
+    window.openModal = (id) => { document.getElementById(id).style.display = 'flex'; };
+    window.closeModal = (id) => { document.getElementById(id).style.display = 'none'; };
+
+    function showToast(msg) {
+        const t = document.getElementById('toastMsg');
+        t.innerText = msg;
+        t.style.opacity = '1';
+        setTimeout(() => t.style.opacity = '0', 3000);
+    }
+
+    // Tab Switching
+    document.querySelectorAll('.nav-btn[data-tab]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const tabId = btn.dataset.tab;
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(`${tabId}Tab`).classList.add('active');
+        });
+    });
+
+    document.getElementById('cartIcon')?.addEventListener('click', () => showToast("Marketplace coming soon! Use Vault to buy inputs."));
+</script>
+</body>
+</html>
